@@ -3,6 +3,7 @@
 ## [1.0.1] — Unreleased
 
 ### Fixed
+- **BUG-HR-BE-012:** Added missing eslint and prettier to devDependencies for code quality tools (`package.json`)
 - **BUG-HR-FE-003:** Added missing .eslintrc.json and .prettierrc for code quality consistency (`frontend/.eslintrc.json`, `frontend/.prettierrc`)
 - **BUG-HR-BE-010:** Added missing .eslintrc.json and .prettierrc for code quality consistency (`backend/.eslintrc.json`, `backend/.prettierrc`)
 - **BUG-HR-BE-011:** Added missing Dockerfile.dev for development Docker builds (`backend/Dockerfile.dev`)

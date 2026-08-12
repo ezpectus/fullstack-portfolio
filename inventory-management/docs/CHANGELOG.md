@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- **BUG-INV-MGMT-BE-012:** Removed inconsistent "type": "module" from package.json to match CommonJS tsconfig configuration (`package.json`)
 - **BUG-INV-MGMT-BE-011:** Updated tsconfig.json module from CommonJS to Node16 and moduleResolution from node10 to node16 to fix deprecation warnings (`tsconfig.json`)
 - **BUG-INV-MGMT-BE-010:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
 - **BUG-INV-MGMT-BE-001:** Auth controller — converted from spread operator array pattern (`...authController.register`) to standard exported handler functions; validation middleware moved to routes (`auth.controller.ts`, `auth.routes.ts`)

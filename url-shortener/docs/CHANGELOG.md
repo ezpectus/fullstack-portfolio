@@ -3,6 +3,7 @@
 ## [1.0.1] — Unreleased
 
 ### Fixed
+- **BUG-URL-BE-016:** Added missing prisma:studio script to package.json (`package.json`)
 - **BUG-URL-BE-015:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
 - **BUG-URL-DEP-001:** Added missing Dockerfile.backend for production Docker builds (`Dockerfile.backend`)
 

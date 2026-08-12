@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- **BUG-INV-BE-009:** Added missing prisma scripts (prisma:generate, prisma:migrate, prisma:seed, prisma:studio) to package.json (`package.json`)
 - **BUG-INV-BE-008:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
 - **BUG-INV-BE-002:** InvoicesService — all Prisma calls extracted to `invoices.repository.ts`; service uses repository methods exclusively, including interactive `transaction(fn)` for multi-table operations (`invoices.service.ts`, `invoices.repository.ts`)
 - **BUG-INV-BE-003:** `/refresh` endpoint reads `refreshToken` from cookie first, body second; no `validateBody` on refresh route to avoid breaking cookie-based flow (`auth.controller.ts`, `auth.routes.ts`)
