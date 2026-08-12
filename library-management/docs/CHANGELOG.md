@@ -29,6 +29,7 @@
 - **BUG-LIB-BE-015**: Health endpoint `/api/health` already protected by rate limiter middleware — confirmed no DoS vulnerability (`app.ts`)
 - **BUG-LIB-BE-016**: Missing RBAC in reservations routes — create and cancel had no role checks. Added `requireRole(ROLES.ADMIN, ROLES.LIBRARIAN, ROLES.MEMBER)` to create and cancel (`reservations.routes.ts`)
 - **BUG-LIB-BE-017**: Missing RBAC in reports routes — popular-genres endpoint had no role checks. Added `requireRole(ROLES.ADMIN, ROLES.LIBRARIAN)` to popular-genres route (`reports.routes.ts`)
+- **BUG-LIB-BE-018**: Missing rate limiting on invite route — `/invite` endpoint lacked `authLimiter`, creating potential DoS vector. Added `authLimiter` to prevent abuse (`auth.routes.ts`)
 
 ## [1.0.0] — 2025-01-15
 
