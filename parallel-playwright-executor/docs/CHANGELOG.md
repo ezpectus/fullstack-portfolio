@@ -382,6 +382,16 @@
   ran. Fixed: create `CronScheduler` with a task runner in
   `_startup` and call `start()`.
 
+- **`Worker.execute` — `UnboundLocalError` on page close when
+  session missing** — If `not self._session` or
+  `self._session.new_page()` threw, `page` was never assigned.
+  The `except` block tried `await page.close()`, raising
+  `UnboundLocalError`. While caught by a broad `except Exception:
+  pass`, this masked the original error and relied on exception
+  swallowing for correctness. Fixed: initialize `page = None`
+  before the `try` block and guard `page.close()` with a `None`
+  check.
+
 ## [2.1.0] — 2025-08-12
 
 ### Bug Fixes
