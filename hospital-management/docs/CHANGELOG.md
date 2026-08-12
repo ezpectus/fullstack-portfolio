@@ -34,7 +34,13 @@
 - **BUG-HOS-BE-031**: Query parameter validation bypass in reports — manual date parsing without validation. Added `dateRangeSchema` with Zod datetime validation for `/appointments` and `/revenue` endpoints (`reports.routes.ts`)
 - **BUG-HOS-BE-032**: Missing `validateParams` middleware in validation module — function did not exist. Added `validateParams` function to validate route parameters with Zod schemas (`middleware/validate.ts`)
 - **BUG-HOS-BE-033**: Missing parameter validation in schedule routes — all routes with `:id` or `:doctorId` parameters lacked validation. Added `idParamSchema` and `doctorIdParamSchema` with `validateParams` middleware to all affected routes (`schedule.routes.ts`)
-- **BUG-HOSP-BE-022**: Missing parameter validation in notifications routes — `:id` parameter lacked validation on patch and delete routes. Added `idParamSchema` with `validateParams` middleware to `/notifications/:id/read` and `/notifications/:id/delete` routes (`notifications.routes.ts`)
+- **BUG-HOS-BE-022**: Missing parameter validation in notifications routes — `:id` parameter lacked validation on patch and delete routes. Added `idParamSchema` with `validateParams` middleware to `/notifications/:id/read` and `/notifications/:id/delete` routes (`notifications.routes.ts`)
+- **BUG-HOS-BE-034**: Missing parameter validation in appointments routes — `:id` parameter lacked validation on get, patch, and delete routes. Added `idParamSchema` with `validateParams` middleware to all affected routes (`appointments.routes.ts`)
+- **BUG-HOS-BE-035**: Missing parameter validation in departments routes — `:id` parameter lacked validation on get, patch, and delete routes. Added `idParamSchema` with `validateParams` middleware to all affected routes (`departments.routes.ts`)
+- **BUG-HOS-BE-036**: Missing parameter validation in doctors routes — `:id` parameter lacked validation on get, patch, and delete routes. Added `idParamSchema` with `validateParams` middleware to all affected routes (`doctors.routes.ts`)
+- **BUG-HOS-BE-037**: Missing parameter validation in patients routes — `:id` parameter lacked validation on get, patch, and delete routes. Added `idParamSchema` with `validateParams` middleware to all affected routes (`patients.routes.ts`)
+- **BUG-HOS-BE-038**: Missing parameter validation in medical-records routes — `:id` and `:appointmentId` parameters lacked validation. Added `idParamSchema` and `appointmentIdParamSchema` with `validateParams` middleware to all affected routes (`medicalRecords.routes.ts`)
+- **BUG-HOS-BE-039**: Missing parameter validation in users routes — `:id` parameter lacked validation on get, patch, and delete routes. Added `idParamSchema` with `validateParams` middleware to all affected routes (`users.routes.ts`)
 
 ### Fixed
 

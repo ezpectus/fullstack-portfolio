@@ -1,13 +1,15 @@
 import { Router, Response } from 'express';
+import { z } from 'zod';
 import { AuthRequest } from '../../middleware/auth';
 import { authenticate } from '../../middleware/auth';
 import { authorize } from '../../middleware/rbac';
 import { asyncHandler } from '../../middleware/asyncHandler';
-import { validateBody, validateQuery } from '../../middleware/validate';
+import { validateBody, validateQuery, validateParams } from '../../middleware/validate';
 import departmentsService from './departments.service';
 import { createDepartmentSchema, updateDepartmentSchema, listDepartmentsQuerySchema } from './departments.dto';
 
 const router = Router();
+const idParamSchema = z.object({ id: z.string().uuid() });
 
 router.get('/', authenticate, asyncHandler(async (req: AuthRequest, res: Response) => {
   const query = listDepartmentsQuerySchema.parse(req.query);
@@ -15,7 +17,7 @@ router.get('/', authenticate, asyncHandler(async (req: AuthRequest, res: Respons
   res.json(result);
 }));
 
-router.get('/:id', authenticate, asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/:id', authenticate, validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const dept = await departmentsService.getById(req.params.id);
   res.json(dept);
 }));
@@ -25,12 +27,12 @@ router.post('/', authenticate, authorize('ADMIN', 'RECEPTIONIST'), validateBody(
   res.status(201).json(dept);
 }));
 
-router.patch('/:id', authenticate, authorize('ADMIN', 'RECEPTIONIST'), validateBody(updateDepartmentSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.patch('/:id', authenticate, authorize('ADMIN', 'RECEPTIONIST'), validateParams(idParamSchema), validateBody(updateDepartmentSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const dept = await departmentsService.update(req.params.id, req.body);
   res.json(dept);
 }));
 
-router.delete('/:id', authenticate, authorize('ADMIN'), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.delete('/:id', authenticate, authorize('ADMIN'), validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   await departmentsService.delete(req.params.id);
   res.status(204).send();
 }));
