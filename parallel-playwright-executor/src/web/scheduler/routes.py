@@ -87,7 +87,7 @@ async def create_schedule(
             if not proj.scalar_one_or_none():
                 raise HTTPException(404, "Project not found")
 
-        now = datetime.now(timezone.utc)
+        now = datetime.now(timezone.utc).replace(tzinfo=None)
         cron = croniter.croniter(req.cron_expr, now)
         next_dt = cron.get_next(datetime)
 

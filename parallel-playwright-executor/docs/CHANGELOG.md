@@ -498,6 +498,19 @@
   had `import uvicorn` inside the function body instead of at
   module top-level. Fixed: moved to top-level imports.
 
+- **Timezone-aware vs naive datetime inconsistency in cron
+  scheduler** — `CronScheduler.add_schedule` and
+  `scheduler/routes.py:create_schedule` used
+  `datetime.now(timezone.utc)` (aware) to compute `next_run_at`,
+  but `CronScheduler._check_and_run` used
+  `datetime.now(timezone.utc).replace(tzinfo=None)` (naive) for
+  comparison. If SQLite preserved the timezone offset in the
+  stored string, reading `sched.next_run_at` would return an
+  aware datetime, and `sched.next_run_at <= now` would raise
+  `TypeError: can't compare offset-naive and offset-aware
+  datetimes`. Fixed: both `add_schedule` and `create_schedule`
+  now use naive datetime, consistent with `_check_and_run`.
+
 ## [2.1.0] — 2025-08-12
 
 ### Bug Fixes
