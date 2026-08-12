@@ -13,7 +13,7 @@
 - **BUG-INV-BE-009:** Added missing prisma scripts (prisma:generate, prisma:migrate, prisma:seed, prisma:studio) to package.json (`package.json`)
 - **BUG-INV-BE-008:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
 - **BUG-INV-BE-002:** InvoicesService — all Prisma calls extracted to `invoices.repository.ts`; service uses repository methods exclusively, including interactive `transaction(fn)` for multi-table operations (`invoices.service.ts`, `invoices.repository.ts`)
-- **BUG-INV-BE-003:** `/refresh` endpoint reads `refreshToken` from cookie first, body second; no `validateBody` on refresh route to avoid breaking cookie-based flow (`auth.controller.ts`, `auth.routes.ts`)
+- **BUG-INV-BE-003**: Added `validateBody(refreshSchema)` to `/refresh` endpoint for consistency with other projects. The schema allows optional `refreshToken` in body while still supporting cookie-based flow (`auth.routes.ts`, `auth.dto.ts`)
 - **BUG-INV-BE-004:** `authService.invite` no longer returns tokens — invited user receives user object only and must authenticate separately (`auth.service.ts`)
 - **BUG-INV-BE-005:** `errorHandler` — removed duplicate if/else branch with identical `console.error` call; simplified to single statement (`errorHandler.ts`)
 - **BUG-INV-BE-006:** 404 catch-all route added to `app.ts` before errorHandler — returns `{ error: { code: 'NOT_FOUND', message: 'Route not found' } }` (`app.ts`)
