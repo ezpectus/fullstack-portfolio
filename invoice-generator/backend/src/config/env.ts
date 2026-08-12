@@ -30,7 +30,7 @@ export const env = {
   nodeEnv: optional('NODE_ENV', 'development'),
   isProduction,
   isDevelopment,
-  databaseUrl: optional('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/invoice_generator?schema=public'),
+  databaseUrl: required('DATABASE_URL'),
   jwt: {
     accessSecret: required('JWT_ACCESS_SECRET', undefined),
     refreshSecret: required('JWT_REFRESH_SECRET', undefined),

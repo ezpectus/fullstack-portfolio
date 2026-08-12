@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+### Security
+- **BUG-INV-MGMT-BE-013**: Removed insecure fallback values from `DATABASE_URL` and `REDIS_URL` — now use `required()` without fallback to prevent running with default credentials (`config/env.ts`)
+
 ### Fixed
 - **BUG-INV-MGMT-BE-012:** Removed inconsistent "type": "module" from package.json to match CommonJS tsconfig configuration (`package.json`)
 - **BUG-INV-MGMT-BE-011:** Updated tsconfig.json module from CommonJS to Node16 and moduleResolution from node10 to node16 to fix deprecation warnings (`tsconfig.json`)

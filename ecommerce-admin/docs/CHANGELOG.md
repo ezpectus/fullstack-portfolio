@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - **BUG-ECOM-BE-011**: `authLimiter` added to `/refresh` route (`auth.routes.ts`)
 - **BUG-ECOM-BE-012**: `authenticate` middleware added to `/logout` route (`auth.routes.ts`)
 - **BUG-ECOM-BE-013**: `role` removed from register swagger schema and input (`auth.routes.ts`)
+- **BUG-ECOM-BE-018**: Removed insecure fallback value from `REDIS_URL` — now uses `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 
 ### Fixed
 

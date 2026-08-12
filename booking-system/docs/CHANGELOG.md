@@ -17,6 +17,7 @@
 - **BUG-BOOK-BE-005**: `bookings.service.delete` now accepts `user` parameter and checks PROVIDER ownership (`bookings.service.ts`, `bookings.controller.ts`)
 - **BUG-BOOK-BE-009**: Missing RBAC in customers routes — create, update, delete had no role checks. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to create and update, `requireRole(ROLES.ADMIN)` to delete (`customers.routes.ts`)
 - **BUG-BOOK-BE-010**: Missing RBAC in schedule block/unblock — any authenticated user could block/unblock slots. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to both endpoints (`schedule.routes.ts`)
+- **BUG-BOOK-BE-011**: Removed insecure fallback values from `DATABASE_URL` and `REDIS_URL` — now use `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 
 ### Fixed
 

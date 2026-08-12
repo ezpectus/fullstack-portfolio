@@ -18,6 +18,7 @@
 - **BUG-HR-BE-001**: `authenticate` middleware added to `/logout` route (`auth.routes.ts`)
 - **BUG-HR-BE-002**: `authRateLimiter` added to `/logout` route (`auth.routes.ts`)
 - **BUG-HR-BE-008**: `authorize` renamed to `requireRole` for naming consistency with other projects; backward-compatible alias exported (`middleware/rbac.ts`, `auth.routes.ts`)
+- **BUG-HR-BE-013**: Removed insecure fallback values from `DATABASE_URL` and `REDIS_URL` — now use `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 
 ### Fixed
 

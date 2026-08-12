@@ -27,6 +27,7 @@
 - **BUG-HOS-BE-005**: `rbac.ts` middleware uses `next(new ForbiddenError())` instead of `res.status().json()` (`middleware/rbac.ts`)
 - **BUG-HOS-BE-025**: Missing ownership check in notifications — any authenticated user could mark as read or delete others' notifications. Added userId check to `markAsRead` and `delete` methods (`notifications.service.ts`, `notifications.routes.ts`)
 - **BUG-HOS-BE-026**: Route order bug in medical-records — `/:id` was defined before `/appointment/:appointmentId`, causing the latter to never match. Reordered routes to fix (`medicalRecords.routes.ts`)
+- **BUG-HOS-BE-027**: Removed insecure fallback values from `DATABASE_URL` and `REDIS_URL` — now use `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 
 ### Fixed
 

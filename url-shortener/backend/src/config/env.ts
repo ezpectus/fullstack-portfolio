@@ -25,7 +25,7 @@ export const env = {
   port: optionalInt('PORT', 4000),
   nodeEnv: process.env.NODE_ENV || 'development',
   databaseUrl: required('DATABASE_URL'),
-  redisUrl: optional('REDIS_URL', 'redis://localhost:6379'),
+  redisUrl: required('REDIS_URL'),
   jwtAccessSecret: required('JWT_ACCESS_SECRET'),
   jwtRefreshSecret: required('JWT_REFRESH_SECRET'),
   jwtAccessExpiry: optional('JWT_ACCESS_EXPIRY', '15m'),

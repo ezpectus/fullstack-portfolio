@@ -19,7 +19,7 @@ function optionalInt(key: string, fallback: number): number {
 export const env = {
   port: optionalInt('PORT', 4000),
   nodeEnv: optional('NODE_ENV', 'development'),
-  databaseUrl: required('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/inventory_management?schema=public'),
+  databaseUrl: required('DATABASE_URL'),
   jwt: {
     accessSecret: required('JWT_ACCESS_SECRET'),
     refreshSecret: required('JWT_REFRESH_SECRET'),
@@ -34,7 +34,7 @@ export const env = {
     origins: optional('CORS_ORIGINS', 'http://localhost:3000,http://localhost:5173').split(','),
   },
   redis: {
-    url: optional('REDIS_URL', 'redis://localhost:6379'),
+    url: required('REDIS_URL'),
   },
   rateLimit: {
     windowMs: optionalInt('RATE_LIMIT_WINDOW_MS', 15 * 60 * 1000),

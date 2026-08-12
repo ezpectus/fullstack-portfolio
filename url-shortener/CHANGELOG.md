@@ -4,6 +4,7 @@
 
 ### Security
 - **BUG-URL-BE-001**: Missing RBAC in links bulk create — any authenticated user could bulk create links. Added `requireAdmin` middleware to `/bulk` endpoint (`links.routes.ts`)
+- **BUG-URL-BE-002**: Removed insecure fallback value from `REDIS_URL` — now uses `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 
 ## [1.0.0] — 2025-01-15
 

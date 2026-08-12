@@ -36,8 +36,8 @@ export const env = {
   nodeEnv: optional('NODE_ENV', 'development'),
   clientUrl: optional('CLIENT_URL', 'http://localhost:3000'),
 
-  databaseUrl: required('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/booking_system?schema=public'),
-  redisUrl: required('REDIS_URL', 'redis://localhost:6379'),
+  databaseUrl: required('DATABASE_URL'),
+  redisUrl: required('REDIS_URL'),
 
   jwt: {
     accessSecret: required('JWT_ACCESS_SECRET'),

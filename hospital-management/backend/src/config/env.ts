@@ -34,8 +34,8 @@ function parseDuration(duration: string): number {
 export const env = {
   PORT: optionalInt('PORT', 4000),
   NODE_ENV: optional('NODE_ENV', 'development'),
-  DATABASE_URL: required('DATABASE_URL', 'postgresql://postgres:postgres@localhost:5432/hospital_management?schema=public'),
-  REDIS_URL: optional('REDIS_URL', 'redis://localhost:6379'),
+  DATABASE_URL: required('DATABASE_URL'),
+  REDIS_URL: required('REDIS_URL'),
   JWT_ACCESS_SECRET: required('JWT_ACCESS_SECRET'),
   JWT_REFRESH_SECRET: required('JWT_REFRESH_SECRET'),
   JWT_ACCESS_EXPIRES_IN: optional('JWT_ACCESS_EXPIRES_IN', '15m'),
