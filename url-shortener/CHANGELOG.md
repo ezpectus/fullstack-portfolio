@@ -6,6 +6,7 @@
 - **BUG-URL-BE-001**: Missing RBAC in links bulk create — any authenticated user could bulk create links. Added `requireAdmin` middleware to `/bulk` endpoint (`links.routes.ts`)
 - **BUG-URL-BE-002**: Removed insecure fallback value from `REDIS_URL` — now uses `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 - **BUG-URL-BE-003**: Health endpoint `/api/health` was defined before rate limiter middleware, creating potential DoS vector. Changed path from `/health` to `/api/health` and moved endpoint definition after `apiRateLimiter` to ensure rate limiting applies (`app.ts`)
+- **BUG-URL-BE-004**: Query parameter validation bypass in redirect route — used unsafe type casting `req.query.password as string | undefined`. Added `passwordQuerySchema` with Zod validation (`redirect.routes.ts`)
 
 ## [1.0.0] — 2025-01-15
 

@@ -1,14 +1,18 @@
 import { Router, Request, Response } from 'express';
+import { z } from 'zod';
 import { redis } from '../../config/redis';
 import { redirectRateLimiter } from '../../middleware/rateLimit';
 import { asyncHandler } from '../../middleware/asyncHandler';
+import { validateQuery } from '../../middleware/validate';
 import { redirectService } from './redirect.service';
 
 const router = Router();
+const passwordQuerySchema = z.object({ password: z.string().optional() });
 
-router.get('/:code', redirectRateLimiter, asyncHandler(async (req: Request, res: Response) => {
+router.get('/:code', redirectRateLimiter, validateQuery(passwordQuerySchema), asyncHandler(async (req: Request, res: Response) => {
   const { code } = req.params;
-  const password = req.query.password as string | undefined;
+  const query = passwordQuerySchema.parse(req.query);
+  const password = query.password;
 
   const result = await redirectService.resolve(code, password);
 
