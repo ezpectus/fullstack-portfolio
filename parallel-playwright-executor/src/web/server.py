@@ -6,6 +6,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+import uvicorn
+
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Query, HTTPException
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -224,5 +226,4 @@ async def _broadcast_update():
 
 
 def start_server(host: str = "0.0.0.0", port: int = 8080):
-    import uvicorn
     uvicorn.run(app, host=host, port=port, log_level="info")

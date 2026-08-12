@@ -464,6 +464,40 @@
   initialized resources (session, profile, proxy) in the
   `except` block of `_initialize` before re-raising.
 
+- **`TaskScheduler._run_with_retry` — silent task loss on
+  unexpected exceptions** — If `pool.execute()` raised an
+  exception (e.g., `WorkerError("Pool not initialized")` from
+  `acquire()`), the exception propagated out of `_run_with_retry`.
+  The `asyncio.Task` wrapping it would die silently (nobody
+  awaits it), and the `add_done_callback` would remove it from
+  `_running_tasks` — but no `TaskResult` was stored in
+  `self._results`. The task disappeared without a trace, causing
+  `wait_all` to complete normally but `results` to be missing
+  entries. Fixed: wrap the retry loop in `try/except Exception`
+  to store a `FAILED` `TaskResult` on unexpected errors.
+
+- **`PlaywrightBrowserEngine.start` — Playwright process leak
+  on launch failure** — If `async_playwright().start()` succeeded
+  but `firefox.launch()` failed, `self._playwright` was a running
+  Playwright process that nobody would ever stop. The caller saw
+  `BrowserLaunchError` and never called `stop()`. Over time,
+  repeated launch failures (e.g., missing Firefox binary) would
+  leak Playwright subprocesses. Fixed: stop and clear
+  `self._playwright` in the `except` block before re-raising.
+
+- **`run_workflow` and `run_benchmark` — resource leak if
+  `proxy_manager.load()` raises** — `proxy_manager.load()` was
+  called outside the `try/finally` block that guarantees
+  `browser_engine.stop()` and `resource_monitor.stop()`. If
+  `load()` raised an exception, both the browser process and the
+  monitor task would be leaked. Fixed: move
+  `proxy_manager.load()` inside the `try` block in both
+  `run_workflow` and `run_benchmark`.
+
+- **Inline `import uvicorn` in `server.py`** — `start_server`
+  had `import uvicorn` inside the function body instead of at
+  module top-level. Fixed: moved to top-level imports.
+
 ## [2.1.0] — 2025-08-12
 
 ### Bug Fixes
