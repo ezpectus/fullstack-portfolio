@@ -1,12 +1,14 @@
 import { Router, Response } from 'express';
+import { z } from 'zod';
 import { AuthRequest, authenticate } from '../../middleware/auth';
 import { authorize } from '../../middleware/rbac';
 import { asyncHandler } from '../../middleware/asyncHandler';
-import { validateQuery } from '../../middleware/validate';
+import { validateQuery, validateParams } from '../../middleware/validate';
 import notificationsService from './notifications.service';
 import { listNotificationsQuerySchema } from './notifications.dto';
 
 const router = Router();
+const idParamSchema = z.object({ id: z.string().uuid() });
 
 router.use(authenticate);
 
@@ -25,7 +27,7 @@ router.get('/unread-count', asyncHandler(async (req: AuthRequest, res: Response)
   res.json({ count });
 }));
 
-router.patch('/:id/read', asyncHandler(async (req: AuthRequest, res: Response) => {
+router.patch('/:id/read', validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const notif = await notificationsService.markAsRead(req.params.id, req.user!.userId);
   res.json(notif);
 }));
@@ -35,7 +37,7 @@ router.patch('/mark-all-read', asyncHandler(async (req: AuthRequest, res: Respon
   res.json({ message: 'All notifications marked as read' });
 }));
 
-router.delete('/:id', asyncHandler(async (req: AuthRequest, res: Response) => {
+router.delete('/:id', validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   await notificationsService.delete(req.params.id, req.user!.userId);
   res.status(204).send();
 }));

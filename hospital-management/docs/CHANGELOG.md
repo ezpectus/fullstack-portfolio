@@ -34,6 +34,7 @@
 - **BUG-HOS-BE-031**: Query parameter validation bypass in reports — manual date parsing without validation. Added `dateRangeSchema` with Zod datetime validation for `/appointments` and `/revenue` endpoints (`reports.routes.ts`)
 - **BUG-HOS-BE-032**: Missing `validateParams` middleware in validation module — function did not exist. Added `validateParams` function to validate route parameters with Zod schemas (`middleware/validate.ts`)
 - **BUG-HOS-BE-033**: Missing parameter validation in schedule routes — all routes with `:id` or `:doctorId` parameters lacked validation. Added `idParamSchema` and `doctorIdParamSchema` with `validateParams` middleware to all affected routes (`schedule.routes.ts`)
+- **BUG-HOSP-BE-022**: Missing parameter validation in notifications routes — `:id` parameter lacked validation on patch and delete routes. Added `idParamSchema` with `validateParams` middleware to `/notifications/:id/read` and `/notifications/:id/delete` routes (`notifications.routes.ts`)
 
 ### Fixed
 
