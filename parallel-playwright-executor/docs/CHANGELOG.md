@@ -453,6 +453,17 @@
   time): no fallback — raises `RuntimeError` if `WEB_JWT_SECRET`
   is missing.
 
+- **`Worker._initialize` — resource leak on partial init failure** —
+  If `create_session()` failed after `proxy_manager.assign()` and
+  `profile_manager.create_profile()` had already succeeded, the
+  proxy assignment and profile directory were never cleaned up.
+  `__aexit__` is never called when `__aenter__` raises, so the
+  `_cleanup()` method never runs. Over time, failed worker
+  initializations (e.g., browser launch failure) would leak proxy
+  slots and profile directories. Fixed: clean up partially
+  initialized resources (session, profile, proxy) in the
+  `except` block of `_initialize` before re-raising.
+
 ## [2.1.0] — 2025-08-12
 
 ### Bug Fixes
