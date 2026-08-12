@@ -6,6 +6,9 @@
 - **BUG-INV-MGMT-BE-013**: Removed insecure fallback values from `DATABASE_URL` and `REDIS_URL` — now use `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 - **BUG-INV-MGMT-BE-014**: Health endpoint `/api/health` already protected by rate limiter middleware — confirmed no DoS vulnerability (`app.ts`)
 - **BUG-INV-MGMT-BE-015**: Missing RBAC in stock-movements routes — list and create had no role checks. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF)` to both endpoints (`stock-movements.routes.ts`)
+- **BUG-INV-MGMT-BE-016**: Query parameter validation bypass in products controller — used `req.query as unknown as ProductPaginationInput` instead of validated schema. Fixed to use `productPaginationSchema.parse(req.query)` (`products.controller.ts`)
+- **BUG-INV-MGMT-BE-017**: Query parameter validation bypass in purchase-orders controller — used `req.query as unknown as PurchaseOrderPaginationInput` instead of validated schema. Fixed to use `purchaseOrderPaginationSchema.parse(req.query)` (`purchase-orders.controller.ts`)
+- **BUG-INV-MGMT-BE-018**: Query parameter validation bypass in stock-movements controller — used `req.query as unknown as MovementPaginationInput` instead of validated schema. Fixed to use `movementPaginationSchema.parse(req.query)` (`stock-movements.controller.ts`)
 
 ### Fixed
 - **BUG-INV-MGMT-BE-012:** Removed inconsistent "type": "module" from package.json to match CommonJS tsconfig configuration (`package.json`)

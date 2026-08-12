@@ -20,6 +20,12 @@
 - **BUG-BOOK-BE-011**: Removed insecure fallback values from `DATABASE_URL` and `REDIS_URL` — now use `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 - **BUG-BOOK-BE-012**: Missing RBAC in bookings status update — any authenticated user could update booking status. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to `/status` endpoint (`bookings.routes.ts`)
 - **BUG-BOOK-BE-013**: Health endpoint `/api/health` was defined before rate limiter middleware, creating potential DoS vector. Moved endpoint definition after `apiRateLimiter` to ensure rate limiting applies (`app.ts`)
+- **BUG-BOOK-BE-014**: Query parameter validation bypass in bookings controller — used `req.query as unknown as RequestQuery` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`bookings.controller.ts`)
+- **BUG-BOOK-BE-015**: Query parameter validation bypass in customers controller — used `req.query as unknown as RequestQuery` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`customers.controller.ts`)
+- **BUG-BOOK-BE-016**: Query parameter validation bypass in notifications controller — used `req.query as unknown as RequestQuery` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`notifications.controller.ts`)
+- **BUG-BOOK-BE-017**: Query parameter validation bypass in providers controller — used `req.query as unknown as RequestQuery` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`providers.controller.ts`)
+- **BUG-BOOK-BE-018**: Query parameter validation bypass in services controller — used `req.query as unknown as RequestQuery` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`services.controller.ts`)
+- **BUG-BOOK-BE-019**: Query parameter validation bypass in users controller — used `req.query as unknown as RequestQuery` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`users.controller.ts`)
 
 ### Fixed
 

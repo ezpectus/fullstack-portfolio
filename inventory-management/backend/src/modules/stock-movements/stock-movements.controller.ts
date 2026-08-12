@@ -7,7 +7,8 @@ import { asyncHandler } from '../../middleware/asyncHandler';
 
 export class StockMovementController {
   list = [validateQuery(movementPaginationSchema), asyncHandler(async (req: Request, res: Response) => {
-    const result = await stockMovementService.list(req.query as unknown as MovementPaginationInput);
+    const query = movementPaginationSchema.parse(req.query) as unknown as MovementPaginationInput;
+    const result = await stockMovementService.list(query);
     res.json(result);
   })];
 

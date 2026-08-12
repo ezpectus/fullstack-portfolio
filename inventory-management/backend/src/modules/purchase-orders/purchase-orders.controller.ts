@@ -7,7 +7,8 @@ import { asyncHandler } from '../../middleware/asyncHandler';
 
 export class PurchaseOrderController {
   list = [validateQuery(purchaseOrderPaginationSchema), asyncHandler(async (req: Request, res: Response) => {
-    const result = await purchaseOrderService.list(req.query as unknown as PurchaseOrderPaginationInput);
+    const query = purchaseOrderPaginationSchema.parse(req.query) as unknown as PurchaseOrderPaginationInput;
+    const result = await purchaseOrderService.list(query);
     res.json(result);
   })];
 

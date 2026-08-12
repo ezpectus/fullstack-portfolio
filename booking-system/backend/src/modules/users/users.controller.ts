@@ -8,7 +8,8 @@ import type { RequestQuery } from '../../shared/types';
 export const list = [
   validateQuery(paginationSchema),
   asyncHandler(async (req: Request, res: Response) => {
-    const result = await usersService.list(req.query as unknown as RequestQuery);
+    const query = paginationSchema.parse(req.query) as unknown as RequestQuery;
+    const result = await usersService.list(query);
     res.json({ data: result.data, pagination: result.pagination });
   }),
 ];
