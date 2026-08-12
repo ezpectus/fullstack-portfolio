@@ -25,6 +25,8 @@
 - **BUG-HOS-BE-019**: `role` removed from register input — prevents privilege escalation (`auth.service.ts`, `auth.dto.ts`)
 - **BUG-HOS-BE-004**: `auth.ts` middleware uses `next(new UnauthorizedError())` instead of `res.status().json()` (`middleware/auth.ts`)
 - **BUG-HOS-BE-005**: `rbac.ts` middleware uses `next(new ForbiddenError())` instead of `res.status().json()` (`middleware/rbac.ts`)
+- **BUG-HOS-BE-025**: Missing ownership check in notifications — any authenticated user could mark as read or delete others' notifications. Added userId check to `markAsRead` and `delete` methods (`notifications.service.ts`, `notifications.routes.ts`)
+- **BUG-HOS-BE-026**: Route order bug in medical-records — `/:id` was defined before `/appointment/:appointmentId`, causing the latter to never match. Reordered routes to fix (`medicalRecords.routes.ts`)
 
 ### Fixed
 

@@ -15,13 +15,13 @@ router.get('/', validateQuery(listMedicalRecordsQuerySchema), asyncHandler(async
   res.json(result);
 }));
 
-router.get('/:id', asyncHandler(async (req: AuthRequest, res: Response) => {
-  const record = await medicalRecordsService.getById(req.params.id);
+router.get('/appointment/:appointmentId', asyncHandler(async (req: AuthRequest, res: Response) => {
+  const record = await medicalRecordsService.getByAppointmentId(req.params.appointmentId);
   res.json(record);
 }));
 
-router.get('/appointment/:appointmentId', asyncHandler(async (req: AuthRequest, res: Response) => {
-  const record = await medicalRecordsService.getByAppointmentId(req.params.appointmentId);
+router.get('/:id', asyncHandler(async (req: AuthRequest, res: Response) => {
+  const record = await medicalRecordsService.getById(req.params.id);
   res.json(record);
 }));
 

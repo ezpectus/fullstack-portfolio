@@ -26,7 +26,7 @@ router.get('/unread-count', asyncHandler(async (req: AuthRequest, res: Response)
 }));
 
 router.patch('/:id/read', asyncHandler(async (req: AuthRequest, res: Response) => {
-  const notif = await notificationsService.markAsRead(req.params.id);
+  const notif = await notificationsService.markAsRead(req.params.id, req.user!.userId);
   res.json(notif);
 }));
 
@@ -36,7 +36,7 @@ router.patch('/mark-all-read', asyncHandler(async (req: AuthRequest, res: Respon
 }));
 
 router.delete('/:id', asyncHandler(async (req: AuthRequest, res: Response) => {
-  await notificationsService.delete(req.params.id);
+  await notificationsService.delete(req.params.id, req.user!.userId);
   res.status(204).send();
 }));
 

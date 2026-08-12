@@ -16,9 +16,10 @@ export class NotificationsService {
     return notificationsRepository.create(data);
   }
 
-  async markAsRead(id: string) {
+  async markAsRead(id: string, userId: string) {
     const notif = await notificationsRepository.findById(id);
     if (!notif) throw new AppError('Notification not found', 404);
+    if (notif.userId !== userId) throw new AppError('You can only mark your own notifications as read', 403);
     return notificationsRepository.markAsRead(id);
   }
 
@@ -26,9 +27,10 @@ export class NotificationsService {
     return notificationsRepository.markAllAsRead(userId);
   }
 
-  async delete(id: string) {
+  async delete(id: string, userId: string) {
     const notif = await notificationsRepository.findById(id);
     if (!notif) throw new AppError('Notification not found', 404);
+    if (notif.userId !== userId) throw new AppError('You can only delete your own notifications', 403);
     return notificationsRepository.delete(id);
   }
 
