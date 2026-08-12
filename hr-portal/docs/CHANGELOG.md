@@ -28,6 +28,7 @@
 - **BUG-HR-BE-020**: Query parameter validation bypass in payroll list — used `req.query as Record<string, string>` instead of validated schema. Fixed to use `listPayslipSchema.parse(req.query)` (`payroll.routes.ts`)
 - **BUG-HR-BE-021**: Query parameter validation bypass in users list — used `req.query as Record<string, string>` instead of validated schema. Fixed to use `listUsersSchema.parse(req.query)` (`users.routes.ts`)
 - **BUG-HR-BE-022**: Query parameter validation bypass in reports — manual `parseInt` without validation and unsafe string casting. Added `monthYearSchema`, `yearSchema`, and `exportSchema` with proper Zod validation (`reports.routes.ts`)
+- **BUG-HR-BE-023**: Generic Error usage in reports service — used `throw new Error()` instead of custom error class. Replaced with `BadRequestError` for proper error handling (`reports.service.ts`)
 
 ### Fixed
 

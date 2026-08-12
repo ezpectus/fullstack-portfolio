@@ -1,4 +1,5 @@
 import { prisma } from '../../config/db';
+import { BadRequestError } from '../../shared/errors';
 
 export class ReportsService {
   async getHeadcountReport() {
@@ -137,7 +138,7 @@ export class ReportsService {
         break;
       }
       default:
-        throw new Error('Invalid report type');
+        throw new BadRequestError('Invalid report type');
     }
 
     const csv = [
