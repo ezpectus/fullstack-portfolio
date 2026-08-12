@@ -3,6 +3,7 @@
 ## [1.0.1] — Unreleased
 
 ### Fixed
+- **BUG-BOOK-FE-003:** Added missing eslint, prettier, and jsdom to frontend devDependencies for code quality and testing (`frontend/package.json`)
 - **BUG-BOOK-FE-001:** Added missing .eslintrc.json and .prettierrc for code quality consistency (`frontend/.eslintrc.json`, `frontend/.prettierrc`)
 - **BUG-BOOK-FE-002:** Added missing Dockerfile.dev for frontend development (`frontend/Dockerfile.dev`)
 - **BUG-BOOK-BE-008:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)

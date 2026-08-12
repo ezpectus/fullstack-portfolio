@@ -3,6 +3,7 @@
 ## [1.0.1] — Unreleased
 
 ### Fixed
+- **BUG-HR-FE-004:** Added missing jsdom to frontend devDependencies for testing (`frontend/package.json`)
 - **BUG-HR-BE-012:** Added missing eslint and prettier to devDependencies for code quality tools (`package.json`)
 - **BUG-HR-FE-003:** Added missing .eslintrc.json and .prettierrc for code quality consistency (`frontend/.eslintrc.json`, `frontend/.prettierrc`)
 - **BUG-HR-BE-010:** Added missing .eslintrc.json and .prettierrc for code quality consistency (`backend/.eslintrc.json`, `backend/.prettierrc`)
