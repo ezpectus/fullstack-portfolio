@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.1] — Unreleased
+
+### Security
+- **BUG-URL-BE-001**: Missing RBAC in links bulk create — any authenticated user could bulk create links. Added `requireAdmin` middleware to `/bulk` endpoint (`links.routes.ts`)
+
 ## [1.0.0] — 2025-01-15
 
 ### Added
