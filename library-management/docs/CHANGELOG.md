@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- **BUG-LIB-DEP-002:** Added missing Dockerfile.backend for production Docker builds (`Dockerfile.backend`)
 - **BUG-LIB-BE-013:** Removed inconsistent "type": "module" from package.json to match CommonJS tsconfig configuration (`package.json`)
 - **BUG-LIB-BE-012:** Updated tsconfig.json module from CommonJS to Node16 and moduleResolution from node10 to node16 to fix deprecation warnings (`tsconfig.json`)
 - **BUG-LIB-BE-011:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
