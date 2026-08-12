@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- **BUG-LIB-BE-012:** Updated tsconfig.json module from CommonJS to Node16 and moduleResolution from node10 to node16 to fix deprecation warnings (`tsconfig.json`)
 - **BUG-LIB-BE-011:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
 - **BUG-LIB-BE-001:** LoansService — replaced direct `prisma` calls in `create` and `returnBook` with repository Tx methods (`loans.service.ts`, `loans.repository.ts`)
 - **BUG-LIB-BE-002:** FinesService — already class-based with repository pattern, no changes needed (`fines.service.ts`)

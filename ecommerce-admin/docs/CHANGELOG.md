@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## [1.0.1] — Unreleased
 
 ### Fixed
+- **BUG-ECOM-BE-016:** Updated tsconfig.json module from CommonJS to Node16 and moduleResolution from node10 to node16 to fix deprecation warnings (`tsconfig.json`)
 - **BUG-ECOM-BE-015:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
 
 ### Security
