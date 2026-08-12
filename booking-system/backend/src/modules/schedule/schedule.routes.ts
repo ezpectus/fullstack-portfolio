@@ -2,7 +2,9 @@ import { Router } from 'express';
 import { z } from 'zod';
 import { getSchedule, getSlots, block, unblock } from './schedule.controller';
 import { authenticate } from '../../middleware/auth';
+import { requireRole } from '../../middleware/rbac';
 import { validateParams } from '../../middleware/validate';
+import { ROLES } from '../../shared/constants';
 
 const router = Router();
 
@@ -13,7 +15,7 @@ router.use(authenticate);
 
 router.get('/:providerId', validateParams(providerIdSchema), ...getSchedule);
 router.get('/:providerId/slots', validateParams(providerIdSchema), ...getSlots);
-router.post('/block', ...block);
-router.delete('/block/:id', validateParams(blockIdSchema), ...unblock);
+router.post('/block', requireRole(ROLES.ADMIN, ROLES.PROVIDER), ...block);
+router.delete('/block/:id', validateParams(blockIdSchema), requireRole(ROLES.ADMIN, ROLES.PROVIDER), ...unblock);
 
 export default router;
