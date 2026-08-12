@@ -6,7 +6,7 @@ import { memberActivity, popularGenres, lostDamaged, exportCsv } from './reports
 const router = Router();
 
 router.get('/member-activity', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN), memberActivity);
-router.get('/popular-genres', authenticate, popularGenres);
+router.get('/popular-genres', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN), popularGenres);
 router.get('/lost-damaged', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN), lostDamaged);
 router.get('/export', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN), exportCsv);
 
