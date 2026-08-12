@@ -33,6 +33,10 @@ All notable changes to this project will be documented in this file.
 - **BUG-ECOM-BE-029**: Query parameter validation bypass in products controller — used `req.query as any` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`products.controller.ts`)
 - **BUG-ECOM-BE-030**: Query parameter validation bypass in promo-codes controller — used `req.query as any` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`promo-codes.controller.ts`)
 - **BUG-ECOM-BE-031**: Query parameter validation bypass in users controller — used `req.query as any` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`users.controller.ts`)
+- **BUG-ECOM-BE-032**: Missing RBAC in settings routes — any authenticated user could access settings. Added `requireRole(ROLES.SUPER_ADMIN)` to all settings routes (`settings.routes.ts`)
+- **BUG-ECOM-BE-033**: Missing RBAC in dashboard routes — any authenticated user could access dashboard overview. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER)` to dashboard route (`dashboard.routes.ts`)
+- **BUG-ECOM-BE-034**: Missing RBAC in analytics routes — any authenticated user could access analytics data. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER)` to all analytics routes (`analytics.routes.ts`)
+- **BUG-ECOM-BE-035**: Query parameter validation bypass in analytics controller — used `req.query as string` and manual `parseInt` without validation. Added `dateRangeSchema` and `limitSchema` with Zod validation (`analytics.controller.ts`)
 
 ### Fixed
 

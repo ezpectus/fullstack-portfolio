@@ -26,6 +26,9 @@
 - **BUG-BOOK-BE-017**: Query parameter validation bypass in providers controller — used `req.query as unknown as RequestQuery` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`providers.controller.ts`)
 - **BUG-BOOK-BE-018**: Query parameter validation bypass in services controller — used `req.query as unknown as RequestQuery` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`services.controller.ts`)
 - **BUG-BOOK-BE-019**: Query parameter validation bypass in users controller — used `req.query as unknown as RequestQuery` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`users.controller.ts`)
+- **BUG-BOOK-BE-020**: Missing RBAC in settings routes — any authenticated user could access settings. Added `requireRole(ROLES.ADMIN)` to all settings routes (`settings.routes.ts`)
+- **BUG-BOOK-BE-021**: Missing RBAC in dashboard routes — any authenticated user could access dashboard stats. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to all dashboard routes (`dashboard.routes.ts`)
+- **BUG-BOOK-BE-022**: Query parameter validation bypass in dashboard controller — used `req.query as string` and manual `parseInt` without validation. Added `dateRangeSchema` and `limitSchema` with Zod validation (`dashboard.controller.ts`)
 
 ### Fixed
 

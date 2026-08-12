@@ -1,24 +1,41 @@
 import { Request, Response } from 'express';
+import { z } from 'zod';
 import { analyticsService } from './analytics.service';
+import { validateQuery } from '../../middleware/validate';
 import { asyncHandler } from '../../middleware/asyncHandler';
 
+const dateRangeSchema = z.object({
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+});
+
+const limitSchema = z.object({
+  limit: z.coerce.number().int().min(1).max(100).optional(),
+});
+
 export const revenue = [
+  validateQuery(dateRangeSchema),
   asyncHandler(async (req: Request, res: Response) => {
-    const data = await analyticsService.getRevenueChart(req.query.startDate as string, req.query.endDate as string);
+    const query = dateRangeSchema.parse(req.query);
+    const data = await analyticsService.getRevenueChart(query.startDate, query.endDate);
     res.json({ data });
   }),
 ];
 
 export const orders = [
+  validateQuery(dateRangeSchema),
   asyncHandler(async (req: Request, res: Response) => {
-    const data = await analyticsService.getOrdersChart(req.query.startDate as string, req.query.endDate as string);
+    const query = dateRangeSchema.parse(req.query);
+    const data = await analyticsService.getOrdersChart(query.startDate, query.endDate);
     res.json({ data });
   }),
 ];
 
 export const topProducts = [
+  validateQuery(limitSchema),
   asyncHandler(async (req: Request, res: Response) => {
-    const data = await analyticsService.getTopProducts(parseInt(req.query.limit as string) || 10);
+    const query = limitSchema.parse(req.query);
+    const data = await analyticsService.getTopProducts(query.limit || 10);
     res.json({ data });
   }),
 ];
@@ -31,8 +48,10 @@ export const topCategories = [
 ];
 
 export const summary = [
+  validateQuery(dateRangeSchema),
   asyncHandler(async (req: Request, res: Response) => {
-    const data = await analyticsService.getSummary(req.query.startDate as string, req.query.endDate as string);
+    const query = dateRangeSchema.parse(req.query);
+    const data = await analyticsService.getSummary(query.startDate, query.endDate);
     res.json({ data });
   }),
 ];

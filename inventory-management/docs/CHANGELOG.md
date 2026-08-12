@@ -9,6 +9,7 @@
 - **BUG-INV-MGMT-BE-016**: Query parameter validation bypass in products controller — used `req.query as unknown as ProductPaginationInput` instead of validated schema. Fixed to use `productPaginationSchema.parse(req.query)` (`products.controller.ts`)
 - **BUG-INV-MGMT-BE-017**: Query parameter validation bypass in purchase-orders controller — used `req.query as unknown as PurchaseOrderPaginationInput` instead of validated schema. Fixed to use `purchaseOrderPaginationSchema.parse(req.query)` (`purchase-orders.controller.ts`)
 - **BUG-INV-MGMT-BE-018**: Query parameter validation bypass in stock-movements controller — used `req.query as unknown as MovementPaginationInput` instead of validated schema. Fixed to use `movementPaginationSchema.parse(req.query)` (`stock-movements.controller.ts`)
+- **BUG-INV-MGMT-BE-019**: Missing RBAC in dashboard routes — any authenticated user could access dashboard metrics. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER)` to all dashboard routes (`dashboard.routes.ts`)
 
 ### Fixed
 - **BUG-INV-MGMT-BE-012:** Removed inconsistent "type": "module" from package.json to match CommonJS tsconfig configuration (`package.json`)
