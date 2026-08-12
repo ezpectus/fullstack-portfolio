@@ -3,6 +3,10 @@
 ## [1.0.1] — Unreleased
 
 ### Fixed
+- **BUG-HOS-BE-022:** Added missing .eslintrc.json and .prettierrc for code quality consistency (`backend/.eslintrc.json`, `backend/.prettierrc`)
+- **BUG-HOS-BE-023:** Added missing Dockerfile.dev for development Docker builds (`backend/Dockerfile.dev`)
+- **BUG-HOS-FE-001:** Added missing vitest.config.ts for frontend testing (`frontend/vitest.config.ts`)
+- **BUG-HOS-FE-002:** Added missing Dockerfile.dev for frontend development (`frontend/Dockerfile.dev`)
 - **BUG-HOS-BE-021:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
 - **BUG-HOS-DEP-001:** Added missing Dockerfile.backend for production Docker builds (`Dockerfile.backend`)
 
