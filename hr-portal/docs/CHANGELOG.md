@@ -30,6 +30,7 @@
 - **BUG-HR-BE-022**: Query parameter validation bypass in reports — manual `parseInt` without validation and unsafe string casting. Added `monthYearSchema`, `yearSchema`, and `exportSchema` with proper Zod validation (`reports.routes.ts`)
 - **BUG-HR-BE-023**: Generic Error usage in reports service — used `throw new Error()` instead of custom error class. Replaced with `BadRequestError` for proper error handling (`reports.service.ts`)
 - **BUG-HR-BE-024**: Missing rate limiting on invite route — `/invite` endpoint lacked `authRateLimiter`, creating potential DoS vector. Added `authRateLimiter` to prevent abuse (`auth.routes.ts`)
+- **BUG-HR-BE-025**: CORS origins used insecure fallback — `CORS_ORIGINS` had default localhost fallback, potentially allowing unintended origins in production. Changed to `required()` to force explicit configuration (`config/env.ts`)
 
 ### Fixed
 

@@ -40,7 +40,7 @@ export const env = {
   JWT_REFRESH_EXPIRES_IN_MS: parseDuration(optional('JWT_REFRESH_EXPIRES_IN', '7d')),
   BCRYPT_SALT_ROUNDS: optionalInt('BCRYPT_SALT_ROUNDS', 10),
   CLIENT_URL: optional('CLIENT_URL', 'http://localhost:3000'),
-  CORS_ORIGINS: optional('CORS_ORIGINS', 'http://localhost:3000').split(','),
+  CORS_ORIGINS: required('CORS_ORIGINS').split(','),
   SMTP_HOST: optional('SMTP_HOST', 'smtp.gmail.com'),
   SMTP_PORT: optionalInt('SMTP_PORT', 587),
   SMTP_USER: optional('SMTP_USER', ''),
