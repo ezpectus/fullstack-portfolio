@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  admin
+  user
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(user)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  shortLinks    ShortLink[]
+  apiKeys       ApiKey[]
+  settings      Settings?
+  refreshTokens RefreshToken[]
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model ShortLink {
+  id          String    @id @default(uuid())
+  originalUrl String
+  shortCode   String    @unique
+  alias       String?   @unique
+  userId      String
+  expiresAt   DateTime?
+  password    String?
+  status      String    @default("active") // active | expired | disabled | archived
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  clicks Click[]
+
+  @@index([userId])
+  @@index([shortCode])
+  @@index([status])
+}
+
+model Click {
+  id        String   @id @default(uuid())
+  shortLinkId String
+  ip        String?
+  userAgent String?
+  referer   String?
+  country   String?
+  city      String?
+  device    String?  // desktop | mobile | tablet
+  browser   String?
+  isUnique  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  shortLink ShortLink @relation(fields: [shortLinkId], references: [id], onDelete: Cascade)
+
+  @@index([shortLinkId])
+  @@index([createdAt])
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  userId    String
+  key       String   @unique
+  name      String
+  lastUsedAt DateTime?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Settings {
+  id           String  @id @default(uuid())
+  userId       String  @unique
+  domain       String  @default("localhost")
+  codeLength   Int     @default(6)
+  blacklist    String[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

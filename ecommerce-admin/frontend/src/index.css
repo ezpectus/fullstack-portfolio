@@ -1,0 +1,93 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 280 20% 99%;
+    --foreground: 263 50% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 263 50% 15%;
+    --primary: 326 78% 56%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 270 40% 96%;
+    --secondary-foreground: 263 50% 15%;
+    --muted: 270 40% 96%;
+    --muted-foreground: 263 20% 50%;
+    --accent: 243 75% 59%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 270 30% 90%;
+    --input: 270 30% 90%;
+    --ring: 326 78% 56%;
+    --radius: 0.625rem;
+  }
+
+  .dark {
+    --background: 263 50% 7%;
+    --foreground: 280 20% 98%;
+    --card: 263 45% 10%;
+    --card-foreground: 280 20% 98%;
+    --primary: 326 78% 56%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 263 35% 15%;
+    --secondary-foreground: 280 20% 98%;
+    --muted: 263 35% 15%;
+    --muted-foreground: 270 15% 65%;
+    --accent: 243 75% 59%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 280 20% 98%;
+    --border: 263 35% 18%;
+    --input: 263 35% 18%;
+    --ring: 326 78% 56%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-full;
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -1000px 0; }
+  100% { background-position: 1000px 0; }
+}
+
+.shimmer {
+  animation: shimmer 2s infinite linear;
+  background: linear-gradient(90deg, hsl(var(--muted)) 0%, hsl(var(--muted-foreground) / 0.1) 50%, hsl(var(--muted)) 100%);
+  background-size: 1000px 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

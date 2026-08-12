@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: invoice-gen-postgres-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: invoice_generator
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../Dockerfile
+    container_name: invoice-gen-backend-dev
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 4000
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/invoice_generator?schema=public
+      JWT_ACCESS_SECRET: access-secret-dev
+      JWT_REFRESH_SECRET: refresh-secret-dev
+      CORS_ORIGINS: http://localhost:5173,http://localhost:3000
+    ports:
+      - '4000:4000'
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npx prisma migrate dev && npx prisma db seed && npx tsx watch src/app.ts"
+
+  frontend:
+    image: node:20-alpine
+    container_name: invoice-gen-frontend-dev
+    restart: unless-stopped
+    working_dir: /app
+    environment:
+      VITE_API_URL: http://localhost:4000
+    ports:
+      - '5173:5173'
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+
+volumes:
+  postgres_dev_data:

@@ -1,0 +1,225 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  HR_ADMIN
+  MANAGER
+  EMPLOYEE
+}
+
+enum EmployeeStatus {
+  ACTIVE
+  ON_LEAVE
+  TERMINATED
+}
+
+enum LeaveTypeName {
+  ANNUAL
+  SICK
+  UNPAID
+  MATERNITY
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum PayslipStatus {
+  DRAFT
+  APPROVED
+  PAID
+}
+
+enum DocumentType {
+  EMPLOYMENT_CONTRACT
+  HIRE_ORDER
+  LEAVE_ORDER
+  CERTIFICATE
+}
+
+enum NotificationType {
+  LEAVE_REQUEST
+  LEAVE_APPROVED
+  LEAVE_REJECTED
+  PAYSLIP_READY
+  DOCUMENT_GENERATED
+  WELCOME
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(EMPLOYEE)
+  phone     String?
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  refreshTokens RefreshToken[]
+  employee      Employee?
+  notifications Notification[]
+
+  @@index([role])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Department {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  managerId   String?
+  manager     Employee? @relation("DepartmentManager", fields: [managerId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  employees Employee[]
+
+  @@index([managerId])
+}
+
+model Employee {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  firstName      String
+  lastName       String
+  dateOfBirth    DateTime
+  phone          String?
+  photo          String?
+  position       String
+  departmentId   String?
+  department     Department? @relation(fields: [departmentId], references: [id])
+  managerId      String?
+  manager        Employee?   @relation("EmployeeManager", fields: [managerId], references: [id], onDelete: SetNull)
+  subordinates   Employee[]  @relation("EmployeeManager")
+  hireDate       DateTime
+  terminationDate DateTime?
+  status         EmployeeStatus @default(ACTIVE)
+  education      String?
+  experience     String?
+  skills         String?
+  salary         Float    @default(0)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  leaveRequests  LeaveRequest[]
+  payslips       Payslip[]
+  documents      Document[]
+  managedDepts   Department[] @relation("DepartmentManager")
+
+  @@index([departmentId])
+  @@index([managerId])
+  @@index([status])
+}
+
+model LeaveType {
+  id           String       @id @default(uuid())
+  name         LeaveTypeName @unique
+  defaultDays  Int          @default(20)
+  carryForward Boolean      @default(false)
+  createdAt    DateTime     @default(now())
+  leaveRequests LeaveRequest[]
+}
+
+model LeaveRequest {
+  id          String      @id @default(uuid())
+  employeeId  String
+  employee    Employee    @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  leaveTypeId String
+  leaveType   LeaveType   @relation(fields: [leaveTypeId], references: [id], onDelete: Cascade)
+  startDate   DateTime
+  endDate     DateTime
+  days        Int
+  comment     String?
+  status      LeaveStatus @default(PENDING)
+  approvedById String?
+  approvedAt  DateTime?
+  rejectionReason String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([employeeId])
+  @@index([status])
+  @@index([startDate])
+}
+
+model Payslip {
+  id          String         @id @default(uuid())
+  employeeId  String
+  employee    Employee       @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  month       Int
+  year        Int
+  baseSalary  Float
+  bonus       Float          @default(0)
+  allowances  Float          @default(0)
+  deductions  Float          @default(0)
+  total       Float
+  status      PayslipStatus  @default(DRAFT)
+  approvedById String?
+  approvedAt  DateTime?
+  paidAt      DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([employeeId])
+  @@index([status])
+  @@unique([employeeId, month, year])
+}
+
+model Document {
+  id          String       @id @default(uuid())
+  employeeId  String
+  employee    Employee     @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  type        DocumentType
+  title       String
+  fileUrl     String?
+  content     String?
+  createdBy   String
+  createdAt   DateTime     @default(now())
+
+  @@index([employeeId])
+  @@index([type])
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+model Settings {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String
+}

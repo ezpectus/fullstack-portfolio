@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  LIBRARIAN
+  MEMBER
+}
+
+enum BookCopyStatus {
+  AVAILABLE
+  BORROWED
+  RESERVED
+  LOST
+  DAMAGED
+}
+
+enum LoanStatus {
+  ACTIVE
+  RETURNED
+  OVERDUE
+}
+
+enum ReservationStatus {
+  PENDING
+  FULFILLED
+  CANCELLED
+  EXPIRED
+}
+
+enum FineStatus {
+  PENDING
+  PAID
+  WAIVED
+}
+
+enum MemberStatus {
+  ACTIVE
+  SUSPENDED
+  EXPIRED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(MEMBER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  member        Member?
+  loans         Loan[]
+  refreshTokens RefreshToken[]
+}
+
+model Category {
+  id       String     @id @default(uuid())
+  name     String
+  parentId String?
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryTree")
+  books    Book[]
+
+  @@index([parentId])
+}
+
+model Book {
+  id          String     @id @default(uuid())
+  isbn        String     @unique
+  title       String
+  authors     String
+  publisher   String?
+  publishYear Int?
+  genre       String?
+  description String?
+  coverUrl    String?
+  categoryId  String?
+  category    Category?  @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  copies      BookCopy[]
+  reservations Reservation[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+
+  @@index([categoryId])
+  @@index([title])
+}
+
+model BookCopy {
+  id          String          @id @default(uuid())
+  bookId      String
+  book        Book            @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  code        String          @unique
+  status      BookCopyStatus  @default(AVAILABLE)
+  condition   String          @default("good")
+  acquiredAt  DateTime        @default(now())
+  loans       Loan[]
+  reservations Reservation[]
+
+  @@index([bookId])
+  @@index([status])
+}
+
+model Member {
+  id          String       @id @default(uuid())
+  userId      String       @unique
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cardNumber  String       @unique
+  phone       String?
+  address     String?
+  status      MemberStatus @default(ACTIVE)
+  joinedAt    DateTime     @default(now())
+  loans       Loan[]
+  reservations Reservation[]
+  fines       Fine[]
+
+  @@index([status])
+}
+
+model Loan {
+  id          String      @id @default(uuid())
+  bookCopyId  String
+  bookCopy    BookCopy    @relation(fields: [bookCopyId], references: [id], onDelete: Cascade)
+  memberId    String
+  member      Member      @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  librarianId String?
+  librarian   User?        @relation(fields: [librarianId], references: [id], onDelete: SetNull)
+  borrowedAt  DateTime    @default(now())
+  dueDate     DateTime
+  returnedAt  DateTime?
+  status      LoanStatus  @default(ACTIVE)
+  renewals    Int         @default(0)
+  fine        Fine?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@index([memberId])
+  @@index([bookCopyId])
+  @@index([status])
+}
+
+model Reservation {
+  id          String            @id @default(uuid())
+  memberId    String
+  member      Member            @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  bookId      String
+  book        Book              @relation(fields: [bookId], references: [id], onDelete: Cascade)
+  bookCopyId  String?
+  bookCopy    BookCopy?         @relation(fields: [bookCopyId], references: [id], onDelete: SetNull)
+  status      ReservationStatus @default(PENDING)
+  reservedAt  DateTime          @default(now())
+  fulfilledAt DateTime?
+  expiresAt   DateTime?
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+
+  @@index([memberId])
+  @@index([bookId])
+  @@index([status])
+}
+
+model Fine {
+  id        String     @id @default(uuid())
+  loanId    String     @unique
+  loan      Loan       @relation(fields: [loanId], references: [id], onDelete: Cascade)
+  memberId  String
+  member    Member     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  amount    Decimal    @db.Decimal(10, 2)
+  status    FineStatus @default(PENDING)
+  reason    String
+  paidAt    DateTime?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([memberId])
+  @@index([status])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  revokedAt DateTime?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}

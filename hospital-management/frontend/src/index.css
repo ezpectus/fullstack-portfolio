@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-primary: #0066cc;
+  --color-primary-dark: #0052a3;
+  --color-primary-light: #e6f0fa;
+  --color-accent: #00a8a8;
+  --color-accent-dark: #008080;
+  --color-bg: #f4f7fa;
+  --color-surface: #ffffff;
+  --color-text: #1a2b42;
+  --color-text-muted: #5a6c83;
+  --color-border: #dce4ed;
+  --color-success: #00a86b;
+  --color-warning: #f5a623;
+  --color-danger: #e53e3e;
+  --color-info: #0066cc;
+}
+
+.dark {
+  --color-primary: #4d9fea;
+  --color-primary-dark: #3a8fd9;
+  --color-primary-light: #1a2b42;
+  --color-accent: #2dbdbd;
+  --color-accent-dark: #1a9d9d;
+  --color-bg: #0d1521;
+  --color-surface: #16212e;
+  --color-text: #e2e8f0;
+  --color-text-muted: #8b9bb4;
+  --color-border: #2a3a4f;
+  --color-success: #2ecc71;
+  --color-warning: #f5a623;
+  --color-danger: #e74c3c;
+  --color-info: #4d9fea;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--color-border) 25%, var(--color-primary-light) 50%, var(--color-border) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 0.375rem;
+}
+
+.fc {
+  --fc-border-color: var(--color-border);
+  --fc-today-bg-color: var(--color-primary-light);
+  --fc-page-bg-color: var(--color-surface);
+  --fc-neutral-bg-color: var(--color-surface);
+  font-family: 'Inter', sans-serif;
+}
+
+.fc .fc-toolbar-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.fc .fc-button {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

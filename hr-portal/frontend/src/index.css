@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-primary: #1e3a8a;
+    --color-primary-dark: #1e2d6b;
+    --color-primary-light: #e0e7ff;
+    --color-accent: #8b5cf6;
+    --color-background: #f1f5f9;
+    --color-surface: #ffffff;
+    --color-text: #1e293b;
+    --color-text-muted: #64748b;
+    --color-border: #cbd5e1;
+    --color-success: #16a34a;
+    --color-warning: #d97706;
+    --color-danger: #dc2626;
+  }
+
+  .dark {
+    --color-primary: #3b82f6;
+    --color-primary-dark: #2563eb;
+    --color-primary-light: #1e293b;
+    --color-accent: #a78bfa;
+    --color-background: #0f172a;
+    --color-surface: #1e293b;
+    --color-text: #e2e8f0;
+    --color-text-muted: #94a3b8;
+    --color-border: #334155;
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+  }
+
+  body {
+    @apply bg-background text-text font-sans antialiased;
+    background-color: var(--color-background);
+    color: var(--color-text);
+  }
+
+  * {
+    border-color: var(--color-border);
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border bg-surface p-6 shadow-sm;
+    background-color: var(--color-surface);
+    border-color: var(--color-border);
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all;
+  }
+
+  .btn-primary {
+    @apply btn text-white;
+    background-color: var(--color-primary);
+  }
+
+  .btn-primary:hover {
+    background-color: var(--color-primary-dark);
+  }
+
+  .btn-secondary {
+    @apply btn border;
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+
+  .btn-danger {
+    @apply btn text-white;
+    background-color: var(--color-danger);
+  }
+
+  .input {
+    @apply w-full rounded-lg border px-3 py-2 text-sm outline-none transition-colors;
+    background-color: var(--color-surface);
+    border-color: var(--color-border);
+    color: var(--color-text);
+  }
+
+  .input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .skeleton {
+    @apply animate-shimmer rounded-lg;
+    background: linear-gradient(90deg, var(--color-border) 25%, var(--color-surface) 50%, var(--color-border) 75%);
+    background-size: 1000px 100%;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,23 @@
+export const ROLES = {
+  SUPER_ADMIN: 'SUPER_ADMIN',
+  MANAGER: 'MANAGER',
+  STAFF: 'STAFF',
+} as const;
+
+export const ORDER_STATUSES = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  SHIPPED: 'SHIPPED',
+  DELIVERED: 'DELIVERED',
+  CANCELLED: 'CANCELLED',
+  REFUNDED: 'REFUNDED',
+} as const;
+
+export const PRODUCT_STATUSES = {
+  ACTIVE: 'ACTIVE',
+  DRAFT: 'DRAFT',
+  ARCHIVED: 'ARCHIVED',
+} as const;
+
+export const DEFAULT_PAGE_SIZE = 20;
+export const MAX_PAGE_SIZE = 100;

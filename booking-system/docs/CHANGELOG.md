@@ -1,0 +1,48 @@
+# Changelog — Booking System
+
+## [1.0.1] — Unreleased
+
+### Security
+
+- **BUG-BOOK-BE-001**: `authenticate` middleware added to `/logout` route (`auth.routes.ts`)
+- **BUG-BOOK-BE-002**: `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` added to bookings create route (`bookings.routes.ts`)
+- **BUG-BOOK-BE-003**: `bookings.service.create` now accepts `user` parameter and checks PROVIDER ownership (`bookings.service.ts`, `bookings.controller.ts`)
+- **BUG-BOOK-BE-005**: `bookings.service.delete` now accepts `user` parameter and checks PROVIDER ownership (`bookings.service.ts`, `bookings.controller.ts`)
+
+### Fixed
+
+- **BUG-BOOK-BE-004**: `parseDuration` function added to env config; `refreshExpiresInMs` used for refresh token expiry and cookie maxAge instead of `parseInt` (`config/env.ts`, `auth.service.ts`, `auth.controller.ts`)
+- **BUG-BOOK-BE-006**: `refreshToken` in `refreshSchema` made optional since controller reads from cookies (`auth.dto.ts`)
+
+### Confirmed
+
+- **BUG-BOOK-BE-007**: Password complexity (min 8 chars, letters + numbers) already present in `registerSchema` and `inviteSchema` (`auth.dto.ts`)
+
+## [1.0.0] — 2024-01-01
+
+### Added
+- Authentication system with JWT access + refresh tokens, bcrypt password hashing
+- User management module (Admin only) with CRUD operations
+- Services module with categories, duration, pricing, and provider assignment
+- Providers module with working hours, service assignments, and bio
+- Bookings module with Redis distributed lock for race condition prevention
+- Schedule module with available slot calculation, time-off blocking
+- Customers module with booking history and notes
+- Notifications module with Nodemailer email integration (confirmation, reminder, cancellation)
+- Dashboard module with stats: today/week bookings, revenue, top services/providers, no-show rate
+- Settings module for business configuration (timezone, cancellation policy, buffer time)
+- Prisma schema with 11 models and proper indexes
+- Database seed with demo data (admin, providers, services, customers, bookings)
+- Swagger/OpenAPI documentation at /api-docs
+- Rate limiting (general + auth-specific)
+- Zod validation on all inputs with detailed error responses
+- Centralized error handling with AppError hierarchy
+- RBAC middleware (Admin, Provider roles)
+- Docker setup with multi-stage builds (backend + frontend)
+- Docker Compose for production and development
+- Nginx config for frontend serving with API proxy
+- Cross-platform launch scripts (start.bat, start-docker.bat, start.sh, start-docker.sh)
+- Architecture documentation with UX design, wireframes, and animation specs
+- API documentation with all endpoints
+- Database documentation with schema details
+- Deployment documentation

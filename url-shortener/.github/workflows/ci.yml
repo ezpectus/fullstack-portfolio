@@ -1,0 +1,102 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  backend:
+    name: Backend — Lint, Test, Build
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: url_shortener_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install backend dependencies
+        run: cd backend && npm ci
+
+      - name: Generate Prisma client
+        run: cd backend && npx prisma generate
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/url_shortener_test?schema=public
+        run: cd backend && npx prisma migrate deploy
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/url_shortener_test?schema=public
+          REDIS_URL: redis://localhost:6379
+          JWT_ACCESS_SECRET: test-access-secret
+          JWT_REFRESH_SECRET: test-refresh-secret
+        run: npm run test:backend
+
+      - name: Build
+        run: npm run build:backend
+
+  frontend:
+    name: Frontend — Lint, Test, Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install root dependencies
+        run: npm ci
+
+      - name: Install frontend dependencies
+        run: cd frontend && npm ci
+
+      - name: Lint
+        run: cd frontend && npm run lint
+
+      - name: Test
+        run: cd frontend && npm run test
+
+      - name: Build
+        run: npm run build:frontend

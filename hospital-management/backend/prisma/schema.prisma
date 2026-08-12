@@ -1,0 +1,250 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  DOCTOR
+  RECEPTIONIST
+  PATIENT
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum BloodType {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+  UNKNOWN
+}
+
+enum NotificationType {
+  APPOINTMENT_REMINDER
+  APPOINTMENT_CONFIRMED
+  APPOINTMENT_CANCELLED
+  MEDICAL_RECORD_UPDATED
+  WELCOME
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(ADMIN)
+  phone     String?
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  refreshTokens RefreshToken[]
+  doctor        Doctor?
+  patient       Patient?
+  notifications Notification[]
+
+  @@index([role])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Department {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  headDoctorId String? @unique
+  headDoctor  Doctor?  @relation("DepartmentHead", fields: [headDoctorId], references: [id])
+  phone       String?
+  location    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  doctors Doctor[] @relation("DepartmentDoctors")
+
+  @@index([headDoctorId])
+}
+
+model Doctor {
+  id           String   @id @default(uuid())
+  userId       String   @unique
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  departmentId String?
+  department   Department? @relation("DepartmentDoctors", fields: [departmentId], references: [id])
+  specialization String
+  bio          String?
+  consultationFee Float @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  workingHours  WorkingHours[]
+  timeOff       TimeOff[]
+  appointments  Appointment[]
+  medicalRecords MedicalRecord[]
+  services      DoctorService[]
+  headOfDepartment Department? @relation("DepartmentHead")
+  patients       Patient[]
+
+  @@index([departmentId])
+}
+
+model DoctorService {
+  id          String   @id @default(uuid())
+  doctorId    String
+  doctor      Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  name        String
+  description String?
+  duration    Int      @default(30)
+  price       Float    @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([doctorId])
+}
+
+model WorkingHours {
+  id         String   @id @default(uuid())
+  doctorId   String
+  doctor     Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  dayOfWeek  Int
+  startTime  String
+  endTime    String
+  isBreak    Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([doctorId])
+}
+
+model TimeOff {
+  id        String   @id @default(uuid())
+  doctorId  String
+  doctor    Doctor   @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  startDate DateTime
+  endDate   DateTime
+  reason    String?
+  createdAt DateTime @default(now())
+
+  @@index([doctorId])
+}
+
+model Patient {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dateOfBirth    DateTime
+  gender         Gender
+  address        String?
+  bloodType      BloodType @default(UNKNOWN)
+  allergies      String?
+  chronicConditions String?
+  insuranceNumber String?
+  emergencyContact String?
+  primaryDoctorId String?
+  primaryDoctor  Doctor?  @relation(fields: [primaryDoctorId], references: [id])
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  appointments    Appointment[]
+  medicalRecords  MedicalRecord[]
+
+  @@index([primaryDoctorId])
+}
+
+model Appointment {
+  id          String   @id @default(uuid())
+  doctorId    String
+  doctor      Doctor   @relation(fields: [doctorId], references: [id])
+  patientId   String
+  patient     Patient  @relation(fields: [patientId], references: [id])
+  startTime   DateTime
+  endTime     DateTime
+  status      AppointmentStatus @default(SCHEDULED)
+  reason      String?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  medicalRecord MedicalRecord?
+  notifications Notification[]
+
+  @@index([doctorId])
+  @@index([patientId])
+  @@index([status])
+  @@index([startTime])
+}
+
+model MedicalRecord {
+  id            String   @id @default(uuid())
+  appointmentId String   @unique
+  appointment   Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  patientId     String
+  patient       Patient  @relation(fields: [patientId], references: [id])
+  doctorId      String
+  doctor        Doctor   @relation(fields: [doctorId], references: [id])
+  complaints    String?
+  examination   String?
+  diagnosis     String?
+  prescriptions String?
+  epicrisis     String?
+  attachments   String[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([patientId])
+  @@index([doctorId])
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  appointmentId String?
+  appointment Appointment? @relation(fields: [appointmentId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([isRead])
+}
+
+model Settings {
+  id    String @id @default(uuid())
+  key   String @unique
+  value String
+}

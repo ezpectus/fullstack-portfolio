@@ -1,0 +1,27 @@
+export const STATUS_CODES = {
+  OK: 200,
+  CREATED: 201,
+  NO_CONTENT: 204,
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  CONFLICT: 409,
+  UNPROCESSABLE: 422,
+  TOO_MANY_REQUESTS: 429,
+  INTERNAL_ERROR: 500,
+} as const;
+
+export const PAGINATION = {
+  DEFAULT_PAGE: 1,
+  DEFAULT_LIMIT: 20,
+  MAX_LIMIT: 100,
+} as const;
+
+export const ROLES = ['ADMIN', 'LIBRARIAN', 'MEMBER'] as const;
+
+export const BOOK_COPY_STATUSES = ['AVAILABLE', 'BORROWED', 'RESERVED', 'LOST', 'DAMAGED'] as const;
+export const LOAN_STATUSES = ['ACTIVE', 'RETURNED', 'OVERDUE'] as const;
+export const RESERVATION_STATUSES = ['PENDING', 'FULFILLED', 'CANCELLED', 'EXPIRED'] as const;
+export const FINE_STATUSES = ['PENDING', 'PAID', 'WAIVED'] as const;
+export const MEMBER_STATUSES = ['ACTIVE', 'SUSPENDED', 'EXPIRED'] as const;

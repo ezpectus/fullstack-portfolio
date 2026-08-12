@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  admin
+  manager
+  sales_rep
+}
+
+enum CustomerStatus {
+  lead
+  active
+  inactive
+}
+
+enum DealStage {
+  new
+  contacted
+  qualified
+  proposal
+  won
+  lost
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  password  String
+  name      String
+  role      UserRole @default(sales_rep)
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  refreshTokens RefreshToken[]
+  customers     Customer[]      @relation("CustomerAssignedTo")
+  deals         Deal[]          @relation("DealAssignedTo")
+  notes         Note[]          @relation("NoteCreatedBy")
+}
+
+model RefreshToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  token     String    @unique
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  createdAt DateTime  @default(now())
+  revokedAt DateTime?
+
+  @@index([userId])
+}
+
+model Customer {
+  id           String         @id @default(uuid()) @db.Uuid
+  name         String
+  company      String?
+  email        String?
+  phone        String?
+  status       CustomerStatus @default(lead)
+  tags         String[]       @default([])
+  avatar       String?
+  assignedToId String?        @db.Uuid
+  assignedTo   User?          @relation("CustomerAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+
+  deals Deal[]
+  notes Note[]
+
+  @@index([status])
+  @@index([assignedToId])
+}
+
+model Deal {
+  id                String    @id @default(uuid()) @db.Uuid
+  title             String
+  amount            Decimal   @default(0) @db.Decimal(12, 2)
+  currency          String    @default("USD") @db.VarChar(3)
+  stage             DealStage @default(new)
+  probability       Int       @default(0)
+  expectedCloseDate DateTime?
+  customerId        String    @db.Uuid
+  customer          Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  assignedToId      String?   @db.Uuid
+  assignedTo        User?     @relation("DealAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  notes Note[]
+
+  @@index([stage])
+  @@index([customerId])
+  @@index([assignedToId])
+}
+
+model Note {
+  id          String    @id @default(uuid()) @db.Uuid
+  content     String
+  isPinned    Boolean   @default(false)
+  customerId  String?   @db.Uuid
+  customer    Customer? @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  dealId      String?   @db.Uuid
+  deal        Deal?     @relation(fields: [dealId], references: [id], onDelete: Cascade)
+  createdById String    @db.Uuid
+  createdBy   User      @relation("NoteCreatedBy", fields: [createdById], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([customerId])
+  @@index([dealId])
+  @@index([createdById])
+}

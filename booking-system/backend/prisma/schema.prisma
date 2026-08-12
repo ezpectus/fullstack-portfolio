@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  PROVIDER
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum NotificationType {
+  CONFIRMATION
+  REMINDER
+  CANCELLATION
+}
+
+enum NotificationStatus {
+  PENDING
+  SENT
+  FAILED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(PROVIDER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  refreshTokens RefreshToken[]
+  provider      Provider?
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model ServiceCategory {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+
+  services Service[]
+}
+
+model Service {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  duration    Int
+  price       Decimal  @default(0)
+  isActive    Boolean  @default(true)
+  categoryId  String?
+  category    ServiceCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  providers     ServiceProvider[]
+  bookings      Booking[]
+
+  @@index([categoryId])
+  @@index([isActive])
+}
+
+model Provider {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio       String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  services       ServiceProvider[]
+  workingHours   WorkingHours[]
+  timeOffs       TimeOff[]
+  bookings       Booking[]
+
+  @@index([isActive])
+}
+
+model ServiceProvider {
+  id         String   @id @default(uuid())
+  serviceId  String
+  service    Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  providerId String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+
+  @@unique([serviceId, providerId])
+  @@index([serviceId])
+  @@index([providerId])
+}
+
+model WorkingHours {
+  id         String   @id @default(uuid())
+  providerId String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  dayOfWeek  Int
+  startTime  String
+  endTime    String
+  isBreak    Boolean  @default(false)
+
+  @@index([providerId])
+}
+
+model TimeOff {
+  id         String   @id @default(uuid())
+  providerId String
+  provider   Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  startDate  DateTime
+  endDate    DateTime
+  reason     String?
+
+  @@index([providerId])
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  phone     String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bookings Booking[]
+
+  @@index([email])
+}
+
+model Booking {
+  id            String        @id @default(uuid())
+  bookingNumber String        @unique
+  serviceId     String
+  service       Service       @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  providerId    String
+  provider      Provider      @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  customerId    String
+  customer      Customer      @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  status        BookingStatus @default(PENDING)
+  startTime     DateTime
+  endTime       DateTime
+  price         Decimal       @default(0)
+  notes         String?
+  cancelReason  String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  notifications Notification[]
+
+  @@index([serviceId])
+  @@index([providerId])
+  @@index([customerId])
+  @@index([status])
+  @@index([startTime])
+}
+
+model Notification {
+  id         String             @id @default(uuid())
+  bookingId  String
+  booking    Booking            @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  type       NotificationType
+  status     NotificationStatus @default(PENDING)
+  sentAt     DateTime?
+  createdAt  DateTime           @default(now())
+
+  @@index([bookingId])
+}
+
+model BusinessSettings {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

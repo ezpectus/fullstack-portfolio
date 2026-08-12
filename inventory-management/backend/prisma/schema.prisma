@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MANAGER
+  STAFF
+}
+
+enum MovementType {
+  IN
+  OUT
+  TRANSFER
+  ADJUSTMENT
+}
+
+enum PurchaseOrderStatus {
+  DRAFT
+  SENT
+  RECEIVED
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(STAFF)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  refreshTokens  RefreshToken[]
+  stockMovements StockMovement[]
+  purchaseOrders PurchaseOrder[]
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Category {
+  id       String     @id @default(uuid())
+  name     String
+  parentId String?
+  parent   Category?  @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("CategoryTree")
+  products Product[]
+
+  @@index([parentId])
+}
+
+model Product {
+  id            String   @id @default(uuid())
+  sku           String   @unique
+  name          String
+  description   String?
+  categoryId    String?
+  category      Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  unit          String   @default("pcs")
+  minStock      Int      @default(0)
+  costPrice     Decimal  @default(0)
+  sellPrice     Decimal  @default(0)
+  barcode       String?
+  imageUrl      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  movements      StockMovement[]
+  stockLevels    StockLevel[]
+  orderItems     PurchaseOrderItem[]
+
+  @@index([categoryId])
+  @@index([name])
+  @@index([sku])
+}
+
+model Warehouse {
+  id        String   @id @default(uuid())
+  name      String
+  address   String?
+  managerId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  stockMovements  StockMovement[]
+  stockLevels     StockLevel[]
+  purchaseOrders  PurchaseOrder[]
+  supplierId      String? @unique
+  supplier        Supplier?       @relation(fields: [supplierId], references: [id], onDelete: SetNull)
+}
+
+model StockMovement {
+  id          String       @id @default(uuid())
+  productId   String
+  product     Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+  warehouseId String
+  warehouse   Warehouse    @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  type        MovementType
+  quantity    Int
+  fromWarehouseId String?
+  comment     String?
+  userId      String
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime     @default(now())
+
+  @@index([productId])
+  @@index([warehouseId])
+  @@index([type])
+  @@index([createdAt])
+}
+
+model Supplier {
+  id        String   @id @default(uuid())
+  name      String
+  contact   String?
+  email     String?
+  phone     String?
+  address   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  warehouse      Warehouse?
+  purchaseOrders PurchaseOrder[]
+}
+
+model StockLevel {
+  id          String    @id @default(uuid())
+  productId   String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  warehouseId String
+  warehouse   Warehouse @relation(fields: [warehouseId], references: [id], onDelete: Cascade)
+  quantity    Int       @default(0)
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([productId, warehouseId])
+  @@index([productId])
+  @@index([warehouseId])
+}
+
+model PurchaseOrder {
+  id          String              @id @default(uuid())
+  poNumber    String              @unique
+  supplierId  String
+  supplier    Supplier            @relation(fields: [supplierId], references: [id], onDelete: Restrict)
+  warehouseId String
+  warehouse   Warehouse           @relation(fields: [warehouseId], references: [id], onDelete: Restrict)
+  status      PurchaseOrderStatus @default(DRAFT)
+  total       Decimal             @default(0)
+  userId      String
+  user        User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  items PurchaseOrderItem[]
+
+  @@index([supplierId])
+  @@index([status])
+  @@index([warehouseId])
+}
+
+model PurchaseOrderItem {
+  id          String         @id @default(uuid())
+  orderId     String
+  order       PurchaseOrder  @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId   String
+  product     Product        @relation(fields: [productId], references: [id], onDelete: Cascade)
+  quantity    Int
+  unitPrice   Decimal
+  totalPrice  Decimal
+
+  @@index([orderId])
+  @@index([productId])
+}

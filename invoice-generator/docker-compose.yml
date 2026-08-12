@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: invoice-gen-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: invoice_generator
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: ../Dockerfile
+    container_name: invoice-gen-backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/invoice_generator?schema=public
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:-access-secret-dev}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-refresh-secret-dev}
+      CORS_ORIGINS: http://localhost:3000
+    ports:
+      - '4000:4000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npx prisma migrate deploy && npx prisma db seed && node dist/app.js"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../Dockerfile.frontend
+    container_name: invoice-gen-frontend
+    restart: unless-stopped
+    environment:
+      VITE_API_URL: http://localhost:4000
+    ports:
+      - '3000:80'
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

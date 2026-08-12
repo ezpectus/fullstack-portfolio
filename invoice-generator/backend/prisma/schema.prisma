@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  ACCOUNTANT
+  VIEWER
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      Role     @default(ACCOUNTANT)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoices       Invoice[]       @relation("UserInvoices")
+  company        Company?
+  templates      Template[]
+  refreshTokens  RefreshToken[]
+  clients        Client[]
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
+
+model Company {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name          String   @default("My Company")
+  address       String?
+  city          String?
+  country       String?
+  postalCode    String?
+  email         String?
+  phone         String?
+  logo          String?
+  taxId         String?
+  bankName      String?
+  bankAccount   String?
+  bankSwift     String?
+  invoicePrefix String   @default("INV")
+  invoiceStart  Int      @default(1)
+  emailSubject  String   @default("Invoice from {company}")
+  emailBody     String   @default("Dear {client}, please find your invoice attached. Thank you for your business.")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Client {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  company   String?
+  email     String
+  address   String?
+  city      String?
+  country   String?
+  postalCode String?
+  taxId     String?
+  phone     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  invoices Invoice[]
+
+  @@index([userId])
+}
+
+model Invoice {
+  id          String        @id @default(uuid())
+  number      String        @unique
+  userId      String
+  user        User          @relation("UserInvoices", fields: [userId], references: [id], onDelete: Cascade)
+  clientId    String
+  client      Client        @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  status      InvoiceStatus @default(DRAFT)
+  issueDate   DateTime      @default(now())
+  dueDate     DateTime
+  currency    String        @default("USD")
+  notes       String?
+  subtotal    Decimal     @default(0)
+  taxTotal    Decimal     @default(0)
+  discountTotal Decimal    @default(0)
+  total       Decimal     @default(0)
+  paidAt      DateTime?
+  sentAt      DateTime?
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  items InvoiceItem[]
+
+  @@index([userId])
+  @@index([clientId])
+  @@index([status])
+}
+
+model InvoiceItem {
+  id          String  @id @default(uuid())
+  invoiceId   String
+  invoice     Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  description String
+  quantity    Decimal  @default(1)
+  unit        String   @default("pcs")
+  unitPrice   Decimal  @default(0)
+  taxRate     Decimal  @default(0)
+  discount    Decimal  @default(0)
+  total       Decimal  @default(0)
+
+  @@index([invoiceId])
+}
+
+model Template {
+  id          String   @id @default(uuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name        String
+  description String
+  quantity    Decimal  @default(1)
+  unit        String   @default("pcs")
+  unitPrice   Decimal  @default(0)
+  taxRate     Decimal  @default(0)
+  discount    Decimal  @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId])
+}
