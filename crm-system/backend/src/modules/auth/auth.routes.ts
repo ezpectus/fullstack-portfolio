@@ -13,6 +13,6 @@ router.post('/login', authRateLimiter, validateBody(loginSchema), authController
 router.post('/refresh', authRateLimiter, validateBody(refreshTokenSchema), authController.refresh);
 router.post('/logout', authenticate, authRateLimiter, authController.logout);
 router.get('/me', authenticate, authController.me);
-router.post('/invite', authenticate, requireAdmin, validateBody(inviteSchema), authController.invite);
+router.post('/invite', authenticate, authRateLimiter, requireAdmin, validateBody(inviteSchema), authController.invite);
 
 export default router;

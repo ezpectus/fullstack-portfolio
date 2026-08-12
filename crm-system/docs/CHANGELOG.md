@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **BUG-CRM-BE-012**: Missing RBAC in dashboard routes — any authenticated user could access dashboard stats. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER)` to all dashboard routes (`dashboard.routes.ts`)
 - **BUG-CRM-BE-013**: Missing authentication on logout route — `/logout` was accessible without authentication. Added `authenticate` middleware before `authRateLimiter` to ensure only authenticated users can logout (`auth.routes.ts`)
 - **BUG-CRM-BE-014**: Health endpoint rate limiter placement — moved `app.use('/api', apiRateLimiter)` before health endpoint definition to ensure `/api/health` is protected by rate limiting (`app.ts`)
+- **BUG-CRM-BE-015**: Missing rate limiting on invite route — `/invite` endpoint lacked `authRateLimiter`, creating potential DoS vector. Added `authRateLimiter` to prevent abuse (`auth.routes.ts`)
 - **BUG-CRM-DB-001:** `Customer.assignedTo` relation now has `onDelete: SetNull` (`schema.prisma`)
 - **BUG-CRM-DB-002:** `Deal.assignedTo` relation now has `onDelete: SetNull` (`schema.prisma`)
 
