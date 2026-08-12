@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 
 ## [1.0.1] — Unreleased
 
+### Fixed
+- **BUG-ECOM-BE-015:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
+
 ### Security
 
 - **BUG-ECOM-BE-001**: JWT secrets now use `required()` without fallback — no insecure defaults (`config/env.ts`)

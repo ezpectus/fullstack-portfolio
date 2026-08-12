@@ -2,6 +2,10 @@
 
 ## [1.0.1] — Unreleased
 
+### Fixed
+- **BUG-HR-BE-009:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
+- **BUG-HR-DEP-001:** Added missing Dockerfile.backend for production Docker builds (`Dockerfile.backend`)
+
 ### Security
 
 - **BUG-HR-BE-001**: `authenticate` middleware added to `/logout` route (`auth.routes.ts`)

@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 ### Fixed
+- **BUG-LIB-BE-011:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
 - **BUG-LIB-BE-001:** LoansService — replaced direct `prisma` calls in `create` and `returnBook` with repository Tx methods (`loans.service.ts`, `loans.repository.ts`)
 - **BUG-LIB-BE-002:** FinesService — already class-based with repository pattern, no changes needed (`fines.service.ts`)
 - **BUG-LIB-BE-003:** DashboardRepository — already extracted, no direct Prisma in service (`dashboard.repository.ts`)

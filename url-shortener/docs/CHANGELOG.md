@@ -2,6 +2,10 @@
 
 ## [1.0.1] — Unreleased
 
+### Fixed
+- **BUG-URL-BE-015:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
+- **BUG-URL-DEP-001:** Added missing Dockerfile.backend for production Docker builds (`Dockerfile.backend`)
+
 ### Security
 
 - **BUG-URL-BE-001**: API keys now hashed via SHA-256 before storage — plaintext keys never persisted (`api-keys.repository.ts`)

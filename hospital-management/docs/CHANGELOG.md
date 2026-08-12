@@ -2,6 +2,10 @@
 
 ## [1.0.1] — Unreleased
 
+### Fixed
+- **BUG-HOS-BE-021:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
+- **BUG-HOS-DEP-001:** Added missing Dockerfile.backend for production Docker builds (`Dockerfile.backend`)
+
 ### Security
 
 - **BUG-HOS-BE-001**: JWT secrets now use `required()` without fallback — prevents running with insecure default secrets (`config/env.ts`)

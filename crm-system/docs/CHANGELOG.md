@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Fixed
+- **BUG-CRM-BE-011:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
+- **BUG-CRM-DEP-001:** Added missing Dockerfile.backend for production Docker builds (`Dockerfile.backend`)
 - **BUG-CRM-FE-001:** Sidebar now filters nav items by user role (`Sidebar.tsx`)
 - **BUG-CRM-FE-002:** ProtectedRoute accepts `roles` prop for route-level RBAC (`App.tsx`)
 - **BUG-CRM-FE-003:** Added `useLogout` hook that clears React Query cache on logout; Topbar updated to use it (`hooks/useLogout.ts`, `components/layout/Topbar.tsx`)
