@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Security
+- **BUG-INV-BE-010**: Missing RBAC in clients routes — create, update, delete had no role checks. Added `requireRole('OWNER', 'ACCOUNTANT')` to create and update, `requireRole('OWNER')` to delete (`clients.routes.ts`)
+- **BUG-INV-BE-011**: Missing RBAC in invoices routes — create, update, update status, delete had no role checks. Added `requireRole('OWNER', 'ACCOUNTANT')` to create, update, and update status, `requireRole('OWNER')` to delete (`invoices.routes.ts`)
+
 ### Fixed
 - **BUG-INV-BE-009:** Added missing prisma scripts (prisma:generate, prisma:migrate, prisma:seed, prisma:studio) to package.json (`package.json`)
 - **BUG-INV-BE-008:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
