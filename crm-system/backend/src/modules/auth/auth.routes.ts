@@ -11,7 +11,7 @@ const router = Router();
 router.post('/register', authRateLimiter, validateBody(registerSchema), authController.register);
 router.post('/login', authRateLimiter, validateBody(loginSchema), authController.login);
 router.post('/refresh', authRateLimiter, validateBody(refreshTokenSchema), authController.refresh);
-router.post('/logout', authRateLimiter, authController.logout);
+router.post('/logout', authenticate, authRateLimiter, authController.logout);
 router.get('/me', authenticate, authController.me);
 router.post('/invite', authenticate, requireAdmin, validateBody(inviteSchema), authController.invite);
 
