@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { authService } from './auth.service';
 import { validateBody } from '../../middleware/validate';
-import { registerSchema, loginSchema, inviteSchema } from './auth.dto';
+import { registerSchema, loginSchema, refreshSchema, inviteSchema } from './auth.dto';
 import { asyncHandler } from '../../middleware/asyncHandler';
 import { env } from '../../config/env';
 
@@ -31,6 +31,7 @@ export const login = [
 ];
 
 export const refresh = [
+  validateBody(refreshSchema),
   asyncHandler(async (req: Request, res: Response) => {
     const refreshToken = req.cookies?.refreshToken;
     if (!refreshToken) {
