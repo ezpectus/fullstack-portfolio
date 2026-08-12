@@ -8,6 +8,7 @@
 - **BUG-INV-BE-012**: Removed insecure fallback value from `DATABASE_URL` — now uses `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 - **BUG-INV-BE-013**: Health endpoint `/api/health` was defined before rate limiter middleware, creating potential DoS vector. Changed path from `/health` to `/api/health` and moved endpoint definition after `apiRateLimiter` to ensure rate limiting applies (`app.ts`)
 - **BUG-INV-BE-014**: Missing RBAC in templates routes — create, update, delete had no role checks. Added `requireRole('OWNER', 'ACCOUNTANT')` to create and update, `requireRole('OWNER')` to delete (`templates.routes.ts`)
+- **BUG-INV-BE-015**: Missing RBAC in reports routes — all report endpoints had no role checks. Added `requireRole('OWNER', 'ACCOUNTANT')` to all report routes (`reports.routes.ts`)
 
 ### Fixed
 - **BUG-INV-BE-009:** Added missing prisma scripts (prisma:generate, prisma:migrate, prisma:seed, prisma:studio) to package.json (`package.json`)
