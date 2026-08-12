@@ -27,6 +27,11 @@ app.use(cors({ origin: env.cors.origins, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(apiRateLimiter);
+
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
 app.use('/uploads', authenticate, express.static(env.upload.dir));
 
 app.use('/api/auth', authRoutes);
@@ -41,10 +46,6 @@ app.use('/api/settings', settingsRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-app.get('/health', (_req, res) => {
-  res.json({ status: 'ok', timestamp: new Date().toISOString() });
-});
 
 app.use((_req, _res, next) => {
   next(new NotFoundError('Route'));

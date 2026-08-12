@@ -20,6 +20,7 @@ All notable changes to this project will be documented in this file.
 - **BUG-ECOM-BE-012**: `authenticate` middleware added to `/logout` route (`auth.routes.ts`)
 - **BUG-ECOM-BE-013**: `role` removed from register swagger schema and input (`auth.routes.ts`)
 - **BUG-ECOM-BE-018**: Removed insecure fallback value from `REDIS_URL` — now uses `required()` without fallback to prevent running with default credentials (`config/env.ts`)
+- **BUG-ECOM-BE-019**: Health endpoint `/api/health` was defined before rate limiter middleware, creating potential DoS vector. Changed path from `/health` to `/api/health` and moved endpoint definition after `apiRateLimiter` to ensure rate limiting applies (`app.ts`)
 
 ### Fixed
 

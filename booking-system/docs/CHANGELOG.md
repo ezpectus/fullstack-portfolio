@@ -19,6 +19,7 @@
 - **BUG-BOOK-BE-010**: Missing RBAC in schedule block/unblock — any authenticated user could block/unblock slots. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to both endpoints (`schedule.routes.ts`)
 - **BUG-BOOK-BE-011**: Removed insecure fallback values from `DATABASE_URL` and `REDIS_URL` — now use `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 - **BUG-BOOK-BE-012**: Missing RBAC in bookings status update — any authenticated user could update booking status. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to `/status` endpoint (`bookings.routes.ts`)
+- **BUG-BOOK-BE-013**: Health endpoint `/api/health` was defined before rate limiter middleware, creating potential DoS vector. Moved endpoint definition after `apiRateLimiter` to ensure rate limiting applies (`app.ts`)
 
 ### Fixed
 

@@ -24,10 +24,15 @@ app.use(helmet());
 app.use(cors({ origin: env.cors.origins, credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(cookieParser());
+app.use(apiRateLimiter);
 
 if (env.nodeEnv !== 'production') {
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 }
+
+app.get('/api/health', (_req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
 app.use('/api', apiRateLimiter);
 

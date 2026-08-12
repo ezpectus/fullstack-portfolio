@@ -27,6 +27,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **BUG-CRM-BE-008:** Dashboard `getRecentActivity` filters notes by ownership for SALES_REP (`dashboard.service.ts`)
 - **BUG-CRM-BE-009:** Added `authRateLimiter` on `/logout` route (`auth.routes.ts`)
 - **BUG-CRM-BE-010:** `refreshTokenSchema` now has optional `refreshToken` field for cookie-based refresh (`auth.dto.ts`)
+- **BUG-CRM-BE-011:** Health endpoint `/api/health` was defined before rate limiter middleware, creating potential DoS vector. Changed path from `/health` to `/api/health` and moved endpoint definition after `apiRateLimiter` to ensure rate limiting applies (`app.ts`, `tests/integration/app.test.ts`)
 - **BUG-CRM-DB-001:** `Customer.assignedTo` relation now has `onDelete: SetNull` (`schema.prisma`)
 - **BUG-CRM-DB-002:** `Deal.assignedTo` relation now has `onDelete: SetNull` (`schema.prisma`)
 
