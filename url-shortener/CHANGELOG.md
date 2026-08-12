@@ -7,6 +7,7 @@
 - **BUG-URL-BE-002**: Removed insecure fallback value from `REDIS_URL` — now uses `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 - **BUG-URL-BE-003**: Health endpoint `/api/health` was defined before rate limiter middleware, creating potential DoS vector. Changed path from `/health` to `/api/health` and moved endpoint definition after `apiRateLimiter` to ensure rate limiting applies (`app.ts`)
 - **BUG-URL-BE-004**: Query parameter validation bypass in redirect route — used unsafe type casting `req.query.password as string | undefined`. Added `passwordQuerySchema` with Zod validation (`redirect.routes.ts`)
+- **BUG-URL-BE-005**: Missing parameter validation in redirect route — `:code` parameter lacked validation. Added `codeParamSchema` with Zod validation to ensure code is alphanumeric with allowed characters (`redirect.routes.ts`)
 
 ## [1.0.0] — 2025-01-15
 

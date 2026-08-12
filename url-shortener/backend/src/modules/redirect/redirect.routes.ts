@@ -3,14 +3,15 @@ import { z } from 'zod';
 import { redis } from '../../config/redis';
 import { redirectRateLimiter } from '../../middleware/rateLimit';
 import { asyncHandler } from '../../middleware/asyncHandler';
-import { validateQuery } from '../../middleware/validate';
+import { validateQuery, validateParams } from '../../middleware/validate';
 import { redirectService } from './redirect.service';
 
 const router = Router();
+const codeParamSchema = z.object({ code: z.string().min(3).max(30).regex(/^[a-zA-Z0-9-_]+$/) });
 const passwordQuerySchema = z.object({ password: z.string().optional() });
 
-router.get('/:code', redirectRateLimiter, validateQuery(passwordQuerySchema), asyncHandler(async (req: Request, res: Response) => {
-  const { code } = req.params;
+router.get('/:code', redirectRateLimiter, validateParams(codeParamSchema), validateQuery(passwordQuerySchema), asyncHandler(async (req: Request, res: Response) => {
+  const { code } = codeParamSchema.parse(req.params);
   const query = passwordQuerySchema.parse(req.query);
   const password = query.password;
 
