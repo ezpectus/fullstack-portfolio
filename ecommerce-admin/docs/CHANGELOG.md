@@ -21,6 +21,18 @@ All notable changes to this project will be documented in this file.
 - **BUG-ECOM-BE-013**: `role` removed from register swagger schema and input (`auth.routes.ts`)
 - **BUG-ECOM-BE-018**: Removed insecure fallback value from `REDIS_URL` — now uses `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 - **BUG-ECOM-BE-019**: Health endpoint `/api/health` was defined before rate limiter middleware, creating potential DoS vector. Changed path from `/health` to `/api/health` and moved endpoint definition after `apiRateLimiter` to ensure rate limiting applies (`app.ts`)
+- **BUG-ECOM-BE-020**: Missing parameter validation in categories routes — `:id` parameter lacked validation. Added `idParamSchema` with `validateParams` middleware to getById, update, and delete routes (`categories.routes.ts`)
+- **BUG-ECOM-BE-021**: Missing parameter validation in customers routes — `:id` parameter lacked validation. Added `idParamSchema` with `validateParams` middleware to getById, update, and delete routes (`customers.routes.ts`)
+- **BUG-ECOM-BE-022**: Missing parameter validation in orders routes — `:id` parameter lacked validation. Added `idParamSchema` with `validateParams` middleware to getById and updateStatus routes (`orders.routes.ts`)
+- **BUG-ECOM-BE-023**: Missing parameter validation in products routes — `:id` parameter lacked validation. Added `idParamSchema` with `validateParams` middleware to getById, update, and delete routes (`products.routes.ts`)
+- **BUG-ECOM-BE-024**: Missing parameter validation in promo-codes routes — `:id` parameter lacked validation. Added `idParamSchema` with `validateParams` middleware to getById, update, and delete routes (`promo-codes.routes.ts`)
+- **BUG-ECOM-BE-025**: Missing parameter validation in users routes — `:id` parameter lacked validation. Added `idParamSchema` with `validateParams` middleware to getById, update, and delete routes (`users.routes.ts`)
+- **BUG-ECOM-BE-026**: Query parameter validation bypass in categories controller — used `req.query as any` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`categories.controller.ts`)
+- **BUG-ECOM-BE-027**: Query parameter validation bypass in customers controller — used `req.query as any` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`customers.controller.ts`)
+- **BUG-ECOM-BE-028**: Query parameter validation bypass in orders controller — used `req.query as any` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`orders.controller.ts`)
+- **BUG-ECOM-BE-029**: Query parameter validation bypass in products controller — used `req.query as any` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`products.controller.ts`)
+- **BUG-ECOM-BE-030**: Query parameter validation bypass in promo-codes controller — used `req.query as any` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`promo-codes.controller.ts`)
+- **BUG-ECOM-BE-031**: Query parameter validation bypass in users controller — used `req.query as any` instead of validated schema. Fixed to use `paginationSchema.parse(req.query)` (`users.controller.ts`)
 
 ### Fixed
 

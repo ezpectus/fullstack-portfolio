@@ -8,7 +8,8 @@ import { AuthRequest } from '../../middleware/auth';
 export const list = [
   validateQuery(paginationSchema),
   asyncHandler(async (req: Request, res: Response) => {
-    const result = await ordersService.list(req.query as any);
+    const query = paginationSchema.parse(req.query);
+    const result = await ordersService.list(query);
     res.json({ data: result.data, pagination: result.pagination });
   }),
 ];

@@ -7,7 +7,8 @@ import { asyncHandler } from '../../middleware/asyncHandler';
 export const list = [
   validateQuery(paginationSchema),
   asyncHandler(async (req: Request, res: Response) => {
-    const result = await promoCodesService.list(req.query as any);
+    const query = paginationSchema.parse(req.query);
+    const result = await promoCodesService.list(query);
     res.json({ data: result.data, pagination: result.pagination });
   }),
 ];
