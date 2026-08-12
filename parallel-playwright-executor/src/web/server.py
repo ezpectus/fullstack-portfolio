@@ -62,6 +62,8 @@ async def _cron_task_runner(task_config: dict[str, Any]) -> dict[str, Any]:
         async with _session_factory() as bg_db:
             for tid, r in result["results"].items():
                 status = r["status"]
+                started = datetime.fromisoformat(r["started_at"]) if r.get("started_at") else None
+                completed = datetime.fromisoformat(r["completed_at"]) if r.get("completed_at") else None
                 await save_task_record(
                     bg_db,
                     task_id=tid,
@@ -72,6 +74,8 @@ async def _cron_task_runner(task_config: dict[str, Any]) -> dict[str, Any]:
                     duration_s=r.get("duration_s"),
                     screenshot_path=r.get("screenshot"),
                     project_id=project_id,
+                    started_at=started,
+                    completed_at=completed,
                 )
             await bg_db.commit()
     return result
@@ -165,6 +169,8 @@ async def api_run(
         async with _session_factory() as bg_db:
             for tid, r in result["results"].items():
                 status = r["status"]
+                started = datetime.fromisoformat(r["started_at"]) if r.get("started_at") else None
+                completed = datetime.fromisoformat(r["completed_at"]) if r.get("completed_at") else None
                 await save_task_record(
                     bg_db,
                     task_id=tid,
@@ -175,6 +181,8 @@ async def api_run(
                     duration_s=r.get("duration_s"),
                     screenshot_path=r.get("screenshot"),
                     project_id=project_id,
+                    started_at=started,
+                    completed_at=completed,
                 )
                 if status == "failed":
                     await _notifier.notify(bg_db, "task_failed", tid, status, r.get("error"), project_id)

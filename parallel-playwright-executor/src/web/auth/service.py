@@ -14,9 +14,10 @@ from web.db.models import UserModel
 
 _pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-SECRET_KEY = os.environ.get("WEB_JWT_SECRET", "")
-if not SECRET_KEY:
+_jwt_secret = os.environ.get("WEB_JWT_SECRET")
+if not _jwt_secret:
     raise RuntimeError("WEB_JWT_SECRET environment variable must be set")
+SECRET_KEY = _jwt_secret
 ALGORITHM = "HS256"
 TOKEN_EXPIRE_HOURS = int(os.environ.get("WEB_JWT_EXPIRE_HOURS", "24"))
 

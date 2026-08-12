@@ -413,19 +413,45 @@
   update schedule metadata in a separate short-lived session per
   schedule.
 
-- **Insecure default JWT secret in `auth/service.py`** —
-  `SECRET_KEY` fell back to the string literal
-  `"change-me-in-production-use-env-var"` when
-  `WEB_JWT_SECRET` was not set. This is a well-known default
-  that attackers could use to forge tokens. Fixed: no fallback —
-  raises `RuntimeError` if `WEB_JWT_SECRET` is missing.
+- **Global slot leak in `RateLimiter.acquire` on cancellation** —
+  `acquire` increments `_global_active` in the first loop, then
+  enters the domain acquisition loop. If `CancelledError` was
+  raised during domain acquisition or the `min_delay` sleep,
+  `_global_active` was never decremented because the caller never
+  got a chance to call `release`. This eventually exhausted all
+  global slots, deadlocking the rate limiter. Fixed: wrap domain
+  acquisition in `try/except BaseException` to release the global
+  slot (and domain slot if acquired) on cancellation.
 
-- **Missing authentication on `/api/status` and `/api/config`
-  endpoints** — Both endpoints exposed system resource metrics
-  (CPU, RAM, disk, network) and application configuration
-  (browser type, worker count, proxy settings, rate limits,
-  fingerprint settings) to any unauthenticated user. Fixed: both
-  now require `CurrentUser` (JWT auth) dependency.
+- **`save_task_record` always set `started_at=completed_at=now`** —
+  Even after adding `retries` and `duration_s` to the results dict,
+  `save_task_record` ignored actual task timing — it always used
+  `datetime.now()` for both `started_at` and `completed_at`. This
+  meant `duration_s` (computed from `TaskResult.duration_seconds`)
+  was stored correctly, but `started_at` and `completed_at` in the
+  DB were always the save time, not the actual task execution
+  time. Fixed: add `started_at` and `completed_at` parameters to
+  `save_task_record`, parse ISO strings from the results dict in
+  both `api_run` and `_cron_task_runner`, and pass real values.
+
+- **`CustomSMSService.get_code` and `CustomEmailService.wait_for_code`
+  crash on non-JSON API responses** — After the `BaseAPIService._request`
+  fix to fall back to `resp.text` on non-JSON responses, `_request`
+  can return `str`. But `sms.py` and `email.py` called `resp.get(...)`
+  without type checking. If the API returned a non-JSON response,
+  `str.get()` raised `AttributeError`, which was NOT caught by
+  `except APIError` — crashing the polling loop permanently.
+  `tempmail.py` and `fivesim.py` already used `except Exception: pass`.
+  Fixed: changed `except APIError` to `except Exception` in both
+  polling loops for consistency. Also fixed `BaseAPIService._request`
+  return type annotation to `dict[str, Any] | str`.
+
+- **Insecure default JWT secret in `auth/service.py` (actually
+  applied)** — CHANGELOG [2.1.0] documented this fix but the code
+  still contained the fallback string
+  `"change-me-in-production-use-env-var"`. Fixed (for real this
+  time): no fallback — raises `RuntimeError` if `WEB_JWT_SECRET`
+  is missing.
 
 ## [2.1.0] — 2025-08-12
 
