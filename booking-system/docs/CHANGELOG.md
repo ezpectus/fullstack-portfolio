@@ -30,6 +30,7 @@
 - **BUG-BOOK-BE-021**: Missing RBAC in dashboard routes — any authenticated user could access dashboard stats. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to all dashboard routes (`dashboard.routes.ts`)
 - **BUG-BOOK-BE-022**: Query parameter validation bypass in dashboard controller — used `req.query as string` and manual `parseInt` without validation. Added `dateRangeSchema` and `limitSchema` with Zod validation (`dashboard.controller.ts`)
 - **BUG-BOOK-BE-023**: Missing body validation on refresh route — `/refresh` endpoint lacked `validateBody` middleware. Added `validateBody(refreshSchema)` to ensure request body is validated (`auth.controller.ts`)
+- **BUG-BOOK-BE-024**: Health endpoint `/api/health` was defined before API rate limiter, creating potential DoS vector. Removed duplicate health endpoint definition and ensured rate limiter applies to all `/api` routes (`app.ts`)
 
 ### Fixed
 
