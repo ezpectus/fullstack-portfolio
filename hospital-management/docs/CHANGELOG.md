@@ -41,6 +41,7 @@
 - **BUG-HOS-BE-037**: Missing parameter validation in patients routes — `:id` parameter lacked validation on get, patch, and delete routes. Added `idParamSchema` with `validateParams` middleware to all affected routes (`patients.routes.ts`)
 - **BUG-HOS-BE-038**: Missing parameter validation in medical-records routes — `:id` and `:appointmentId` parameters lacked validation. Added `idParamSchema` and `appointmentIdParamSchema` with `validateParams` middleware to all affected routes (`medicalRecords.routes.ts`)
 - **BUG-HOS-BE-039**: Missing parameter validation in users routes — `:id` parameter lacked validation on get, patch, and delete routes. Added `idParamSchema` with `validateParams` middleware to all affected routes (`users.routes.ts`)
+- **BUG-HOS-BE-040**: Missing rate limiting on invite route — `/invite` endpoint lacked `authRateLimiter`, creating potential DoS vector. Added `authRateLimiter` to prevent abuse (`auth.routes.ts`)
 
 ### Fixed
 

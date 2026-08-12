@@ -42,7 +42,7 @@ router.get('/me', authenticate, asyncHandler(async (req: AuthRequest, res: Respo
   res.json(user);
 }));
 
-router.post('/invite', authenticate, authorize('ADMIN'), validateBody(inviteSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.post('/invite', authenticate, authRateLimiter, authorize('ADMIN'), validateBody(inviteSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const result = await authService.invite(req.body, req.user!.userId);
   res.status(201).json(result);
 }));
