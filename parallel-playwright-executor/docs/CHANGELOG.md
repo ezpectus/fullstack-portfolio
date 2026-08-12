@@ -616,6 +616,35 @@
   this function (`started_engine`, `started_monitor` flags) and
   only stop them if we started them.
 
+- **`CronScheduler._check_and_run` — stale `now` causes
+  double-fire for short cron intervals** — `now` was computed
+  once at the start of `_check_and_run` and reused for all due
+  schedules. If schedule execution took time (e.g., running a
+  workflow), `cron.get_next(datetime)` used the stale `now` as
+  base. For short cron intervals (e.g., `*/1 * * * *`), the
+  computed `next_run_at` would be in the past by the time the
+  update was committed, causing the schedule to fire again
+  immediately on the next check cycle. Fixed: recompute `now`
+  after each schedule execution before computing `next_run_at`.
+
+- **`FiveSimSMSService.get_code` — `resp.get("sms", [])` without
+  `isinstance` check** — `get_balance` and `request_number` were
+  fixed with `isinstance(resp, dict)` guards, but `get_code` was
+  missed. If the 5sim API returned a non-JSON response (e.g.,
+  HTML error page), `str.get()` raised `AttributeError`. While
+  caught by `except Exception: pass`, this was a latent bug
+  inconsistent with the other fixes. Fixed: add `isinstance`
+  guard with early `continue` on non-dict responses.
+
+- **`Worker.execute` — failure screenshot taken from a blank
+  page** — On non-timeout task failures, the error handler
+  opened a **new** page via `self._session.new_page()` to take
+  the failure screenshot. The new page was `about:blank` — the
+  screenshot was useless. The original `page` was still open
+  (closed in `finally`) and contained the actual error state.
+  Fixed: use the original `page` for the screenshot instead of
+  opening a new blank one.
+
 ## [2.1.0] — 2025-08-12
 
 ### Bug Fixes
