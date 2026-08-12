@@ -15,7 +15,7 @@ router.use(authenticate);
 router.get('/', ...list);
 router.get('/:id', validateParams(idParamSchema), ...getById);
 router.post('/', requireRole(ROLES.ADMIN, ROLES.PROVIDER), ...create);
-router.patch('/:id/status', validateParams(idParamSchema), ...updateStatus);
+router.patch('/:id/status', validateParams(idParamSchema), requireRole(ROLES.ADMIN, ROLES.PROVIDER), ...updateStatus);
 router.delete('/:id', validateParams(idParamSchema), requireRole(ROLES.ADMIN), ...remove);
 
 export default router;
