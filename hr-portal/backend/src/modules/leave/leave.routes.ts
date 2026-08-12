@@ -12,7 +12,8 @@ const idParamSchema = z.object({ id: z.string().uuid() });
 const employeeIdParamSchema = z.object({ employeeId: z.string().uuid() });
 
 router.get('/', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateQuery(listLeaveSchema), asyncHandler(async (req, res) => {
-  const result = await leaveService.list(req.query as Record<string, string>);
+  const query = listLeaveSchema.parse(req.query);
+  const result = await leaveService.list(query);
   res.json(result);
 }));
 
@@ -21,9 +22,11 @@ router.get('/types', authenticate, asyncHandler(async (_req, res) => {
   res.json(types);
 }));
 
-router.get('/balance/:employeeId', authenticate, validateParams(employeeIdParamSchema), asyncHandler(async (req, res) => {
-  const year = req.query.year ? parseInt(req.query.year as string) : undefined;
-  const balance = await leaveService.getBalance(req.params.employeeId, year);
+const yearSchema = z.object({ year: z.coerce.number().optional() });
+
+router.get('/balance/:employeeId', authenticate, validateParams(employeeIdParamSchema), validateQuery(yearSchema), asyncHandler(async (req, res) => {
+  const query = yearSchema.parse(req.query);
+  const balance = await leaveService.getBalance(req.params.employeeId, query.year);
   res.json(balance);
 }));
 

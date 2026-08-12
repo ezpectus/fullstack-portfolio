@@ -20,6 +20,14 @@
 - **BUG-HR-BE-008**: `authorize` renamed to `requireRole` for naming consistency with other projects; backward-compatible alias exported (`middleware/rbac.ts`, `auth.routes.ts`)
 - **BUG-HR-BE-013**: Removed insecure fallback values from `DATABASE_URL` and `REDIS_URL` — now use `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 - **BUG-HR-BE-014**: Health endpoint `/api/health` already protected by rate limiter middleware — confirmed no DoS vulnerability (`app.ts`)
+- **BUG-HR-BE-015**: Query parameter validation bypass in departments list — used `req.query as Record<string, string>` instead of validated schema. Fixed to use `listDepartmentsSchema.parse(req.query)` (`departments.routes.ts`)
+- **BUG-HR-BE-016**: Query parameter validation bypass in documents list — used `req.query as Record<string, string>` instead of validated schema. Fixed to use `listDocumentsSchema.parse(req.query)` (`documents.routes.ts`)
+- **BUG-HR-BE-017**: Query parameter validation bypass in employees list — used `req.query as Record<string, string>` instead of validated schema. Fixed to use `listEmployeesSchema.parse(req.query)` (`employees.routes.ts`)
+- **BUG-HR-BE-018**: Query parameter validation bypass in leave list and balance — used `req.query as Record<string, string>` and manual `parseInt`. Fixed to use `listLeaveSchema.parse(req.query)` and added `yearSchema` with Zod coercion (`leave.routes.ts`)
+- **BUG-HR-BE-019**: Query parameter validation bypass in notifications list — manual parsing without validation. Added `listNotificationsSchema` with proper Zod validation and boolean conversion (`notifications.routes.ts`)
+- **BUG-HR-BE-020**: Query parameter validation bypass in payroll list — used `req.query as Record<string, string>` instead of validated schema. Fixed to use `listPayslipSchema.parse(req.query)` (`payroll.routes.ts`)
+- **BUG-HR-BE-021**: Query parameter validation bypass in users list — used `req.query as Record<string, string>` instead of validated schema. Fixed to use `listUsersSchema.parse(req.query)` (`users.routes.ts`)
+- **BUG-HR-BE-022**: Query parameter validation bypass in reports — manual `parseInt` without validation and unsafe string casting. Added `monthYearSchema`, `yearSchema`, and `exportSchema` with proper Zod validation (`reports.routes.ts`)
 
 ### Fixed
 

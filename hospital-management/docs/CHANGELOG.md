@@ -29,6 +29,9 @@
 - **BUG-HOS-BE-026**: Route order bug in medical-records — `/:id` was defined before `/appointment/:appointmentId`, causing the latter to never match. Reordered routes to fix (`medicalRecords.routes.ts`)
 - **BUG-HOS-BE-027**: Removed insecure fallback values from `DATABASE_URL` and `REDIS_URL` — now use `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 - **BUG-HOS-BE-028**: Health endpoint `/api/health` was defined before rate limiter middleware, creating potential DoS vector. Moved endpoint definition after `apiRateLimiter` to ensure rate limiting applies (`app.ts`)
+- **BUG-HOS-BE-029**: Query parameter validation bypass in medical-records list — used `req.query as any` instead of validated schema. Fixed to use `listMedicalRecordsQuerySchema.parse(req.query)` (`medicalRecords.routes.ts`)
+- **BUG-HOS-BE-030**: Query parameter validation bypass in notifications list — manual parsing instead of validated schema. Fixed to use `listNotificationsQuerySchema.parse(req.query)` with proper boolean conversion (`notifications.routes.ts`)
+- **BUG-HOS-BE-031**: Query parameter validation bypass in reports — manual date parsing without validation. Added `dateRangeSchema` with Zod datetime validation for `/appointments` and `/revenue` endpoints (`reports.routes.ts`)
 
 ### Fixed
 

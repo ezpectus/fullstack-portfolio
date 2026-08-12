@@ -11,7 +11,8 @@ const router = Router();
 const idParamSchema = z.object({ id: z.string().uuid() });
 
 router.get('/', authenticate, authorize('HR_ADMIN'), validateQuery(listUsersSchema), asyncHandler(async (req, res) => {
-  const result = await usersService.list(req.query as Record<string, string>);
+  const query = listUsersSchema.parse(req.query);
+  const result = await usersService.list(query);
   res.json(result);
 }));
 

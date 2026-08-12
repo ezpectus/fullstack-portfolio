@@ -11,7 +11,8 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/', validateQuery(listMedicalRecordsQuerySchema), asyncHandler(async (req: AuthRequest, res: Response) => {
-  const result = await medicalRecordsService.list(req.query as any);
+  const query = listMedicalRecordsQuerySchema.parse(req.query);
+  const result = await medicalRecordsService.list(query);
   res.json(result);
 }));
 

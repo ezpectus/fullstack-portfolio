@@ -11,7 +11,8 @@ const router = Router();
 const idParamSchema = z.object({ id: z.string().uuid() });
 
 router.get('/', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateQuery(listPayslipSchema), asyncHandler(async (req, res) => {
-  const result = await payrollService.list(req.query as Record<string, string>);
+  const query = listPayslipSchema.parse(req.query);
+  const result = await payrollService.list(query);
   res.json(result);
 }));
 

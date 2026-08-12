@@ -3,17 +3,22 @@ import { z } from 'zod';
 import notificationsService from './notifications.service';
 import { authenticate, AuthRequest } from '../../middleware/auth';
 import { asyncHandler } from '../../middleware/asyncHandler';
-import { validateParams } from '../../middleware/validate';
+import { validateParams, validateQuery } from '../../middleware/validate';
 
 const router = Router();
 const idParamSchema = z.object({ id: z.string().uuid() });
+const listNotificationsSchema = z.object({
+  page: z.coerce.number().optional(),
+  limit: z.coerce.number().optional(),
+  isRead: z.enum(['true', 'false']).optional(),
+});
 
-router.get('/', authenticate, asyncHandler(async (req: AuthRequest, res) => {
-  const isRead = req.query.isRead !== undefined ? req.query.isRead === 'true' : undefined;
+router.get('/', authenticate, validateQuery(listNotificationsSchema), asyncHandler(async (req: AuthRequest, res) => {
+  const query = listNotificationsSchema.parse(req.query);
   const result = await notificationsService.list(req.user!.userId, {
-    page: req.query.page ? parseInt(req.query.page as string) : undefined,
-    limit: req.query.limit ? parseInt(req.query.limit as string) : undefined,
-    isRead,
+    page: query.page,
+    limit: query.limit,
+    isRead: query.isRead === 'true' ? true : query.isRead === 'false' ? false : undefined,
   });
   res.json(result);
 }));

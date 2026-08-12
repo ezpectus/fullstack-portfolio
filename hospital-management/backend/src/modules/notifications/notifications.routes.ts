@@ -11,11 +11,11 @@ const router = Router();
 router.use(authenticate);
 
 router.get('/', validateQuery(listNotificationsQuerySchema), asyncHandler(async (req: AuthRequest, res: Response) => {
-  const isRead = req.query.isRead !== undefined ? req.query.isRead === 'true' : undefined;
+  const query = listNotificationsQuerySchema.parse(req.query);
   const result = await notificationsService.list(req.user!.userId, {
-    page: Number(req.query.page),
-    limit: Number(req.query.limit),
-    isRead,
+    page: query.page,
+    limit: query.limit,
+    isRead: query.isRead === 'true' ? true : query.isRead === 'false' ? false : undefined,
   });
   res.json(result);
 }));

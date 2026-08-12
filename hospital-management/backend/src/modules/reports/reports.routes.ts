@@ -1,17 +1,25 @@
 import { Router, Response } from 'express';
+import { z } from 'zod';
 import { AuthRequest, authenticate } from '../../middleware/auth';
 import { authorize } from '../../middleware/rbac';
 import { asyncHandler } from '../../middleware/asyncHandler';
+import { validateQuery } from '../../middleware/validate';
 import reportsService from './reports.service';
+
+const dateRangeSchema = z.object({
+  startDate: z.string().datetime().optional(),
+  endDate: z.string().datetime().optional(),
+});
 
 const router = Router();
 
 router.use(authenticate);
 router.use(authorize('ADMIN', 'DOCTOR'));
 
-router.get('/appointments', asyncHandler(async (req: AuthRequest, res: Response) => {
-  const startDate = req.query.startDate ? new Date(req.query.startDate as string) : undefined;
-  const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined;
+router.get('/appointments', validateQuery(dateRangeSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+  const query = dateRangeSchema.parse(req.query);
+  const startDate = query.startDate ? new Date(query.startDate) : undefined;
+  const endDate = query.endDate ? new Date(query.endDate) : undefined;
   const report = await reportsService.getAppointmentReport(startDate, endDate);
   res.json(report);
 }));
@@ -26,9 +34,10 @@ router.get('/doctors', authorize('ADMIN'), asyncHandler(async (_req: AuthRequest
   res.json(report);
 }));
 
-router.get('/revenue', authorize('ADMIN'), asyncHandler(async (req: AuthRequest, res: Response) => {
-  const startDate = req.query.startDate ? new Date(req.query.startDate as string) : undefined;
-  const endDate = req.query.endDate ? new Date(req.query.endDate as string) : undefined;
+router.get('/revenue', authorize('ADMIN'), validateQuery(dateRangeSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+  const query = dateRangeSchema.parse(req.query);
+  const startDate = query.startDate ? new Date(query.startDate) : undefined;
+  const endDate = query.endDate ? new Date(query.endDate) : undefined;
   const report = await reportsService.getRevenueReport(startDate, endDate);
   res.json(report);
 }));
