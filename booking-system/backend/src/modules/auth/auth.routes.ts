@@ -59,6 +59,6 @@ router.get('/me', authenticate, ...me);
  *     summary: Invite a new user (admin only)
  *     tags: [Auth]
  */
-router.post('/invite', authenticate, requireRole(ROLES.ADMIN), ...invite);
+router.post('/invite', authenticate, authRateLimiter, requireRole(ROLES.ADMIN), ...invite);
 
 export default router;

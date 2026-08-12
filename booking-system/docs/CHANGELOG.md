@@ -31,6 +31,7 @@
 - **BUG-BOOK-BE-022**: Query parameter validation bypass in dashboard controller — used `req.query as string` and manual `parseInt` without validation. Added `dateRangeSchema` and `limitSchema` with Zod validation (`dashboard.controller.ts`)
 - **BUG-BOOK-BE-023**: Missing body validation on refresh route — `/refresh` endpoint lacked `validateBody` middleware. Added `validateBody(refreshSchema)` to ensure request body is validated (`auth.controller.ts`)
 - **BUG-BOOK-BE-024**: Health endpoint `/api/health` was defined before API rate limiter, creating potential DoS vector. Removed duplicate health endpoint definition and ensured rate limiter applies to all `/api` routes (`app.ts`)
+- **BUG-BOOK-BE-025**: Missing rate limiting on invite route — `/invite` endpoint lacked `authRateLimiter`, creating potential DoS vector. Added `authRateLimiter` to prevent abuse (`auth.routes.ts`)
 
 ### Fixed
 
