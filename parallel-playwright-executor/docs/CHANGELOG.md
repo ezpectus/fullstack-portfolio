@@ -511,6 +511,36 @@
   datetimes`. Fixed: both `add_schedule` and `create_schedule`
   now use naive datetime, consistent with `_check_and_run`.
 
+- **`save_task_record` — timezone-aware datetime stored in naive
+  DB columns** — `save_task_record` used `datetime.now(timezone.utc)`
+  (aware) as fallback for `started_at`/`completed_at`, and
+  passed through caller-provided aware datetimes without
+  stripping tzinfo. SQLAlchemy `DateTime` columns without
+  `timezone=True` store aware datetimes as strings with offset,
+  but read them back as naive. This caused `TypeError` on
+  comparison between freshly-created and DB-loaded records.
+  Fixed: use `datetime.now(timezone.utc).replace(tzinfo=None)`
+  and strip tzinfo from `started_at`/`completed_at` parameters.
+
+- **`FiveSimSMSService.get_balance` and `request_number` crash
+  on non-JSON API responses** — After `BaseAPIService._request`
+  was fixed to fall back to `resp.text` on non-JSON responses,
+  `_request` can return `str`. But `get_balance` and
+  `request_number` called `resp.get(...)` without checking
+  `isinstance(resp, dict)`. If the API returned a non-JSON
+  response (e.g., HTML error page), `str.get()` raised
+  `AttributeError`. Fixed: add `isinstance(resp, dict)` guards.
+
+- **`CustomSMSService.request_number` and `get_balance` crash
+  on non-JSON API responses** — Same issue as `fivesim.py`:
+  `resp.get(...)` called without `isinstance` check. Fixed:
+  add `isinstance(resp, dict)` guards.
+
+- **`CustomEmailService.create_address`, `get_messages`, and
+  `get_message` crash on non-JSON API responses** — Same issue:
+  `resp.get(...)` called without `isinstance` check in three
+  methods. Fixed: add `isinstance(resp, dict)` guards.
+
 ## [2.1.0] — 2025-08-12
 
 ### Bug Fixes
