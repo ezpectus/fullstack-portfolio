@@ -34,7 +34,7 @@ router.get('/me', authenticate, asyncHandler(async (req: AuthRequest, res) => {
   res.json(user);
 }));
 
-router.post('/invite', authenticate, requireRole('HR_ADMIN'), validateBody(inviteSchema), asyncHandler(async (req, res) => {
+router.post('/invite', authenticate, authRateLimiter, requireRole('HR_ADMIN'), validateBody(inviteSchema), asyncHandler(async (req, res) => {
   const result = await authService.invite(req.body);
   res.status(201).json(result);
 }));
