@@ -541,6 +541,57 @@
   `resp.get(...)` called without `isinstance` check in three
   methods. Fixed: add `isinstance(resp, dict)` guards.
 
+- **`Worker.execute` — page leak and permanent BUSY status on
+  `CancelledError`** — In Python 3.9+, `asyncio.CancelledError`
+  is a `BaseException`, not `Exception`. The `except Exception`
+  block in `execute` did not catch it, so if a task was
+  cancelled: (1) the browser page was never closed (leaked),
+  (2) `self._status` remained `BUSY` forever, making the worker
+  unusable, (3) `self._current_task_id` was never cleared.
+  Fixed: moved page cleanup and status reset to a `finally`
+  block that runs for all exit paths including cancellation.
+
+- **`server.py` startup — `resource_monitor` never started** —
+  The shutdown handler called `resource_monitor.stop()`, but
+  the startup handler never called `resource_monitor.start()`.
+  As a result, the `/api/status` endpoint always returned
+  `{"error": "Monitor not started"}`. Fixed: call
+  `resource_monitor.start(interval_s=2.0)` in the startup
+  handler.
+
+- **`models.py` `_utcnow` — timezone-aware datetime default for
+  naive DB columns** — `_utcnow` returned
+  `datetime.now(timezone.utc)` (aware), used as `default` for
+  `created_at` columns across all models. But `DateTime` columns
+  lack `timezone=True`, so SQLAlchemy stored aware datetimes as
+  strings with offset and read them back as naive. This caused
+  `TypeError` on comparison between freshly-created and
+  DB-loaded records. Fixed: use
+  `datetime.now(timezone.utc).replace(tzinfo=None)`.
+
+- **Inline `from web.server import start_server` in `cli/app.py`**
+  — The `web` CLI command had an inline import inside the
+  function body. Fixed: moved to top-level imports.
+
+- **`NotificationSender.notify` — global channels skipped for
+  project tasks** — When `project_id` was not None, `notify`
+  filtered only channels with `project_id == project_id`,
+  missing global channels (`project_id IS NULL`). This was
+  inconsistent with `list_channels` route which returns both
+  project-specific and global channels. A global Discord webhook
+  would not receive notifications for project-scoped task
+  failures. Fixed: use `OR` condition to include both
+  project-specific and global channels.
+
+- **`server.py` — background task from `/api/run` not tracked
+  or cleaned up on shutdown** — `asyncio.create_task(_run())`
+  was fire-and-forget. On shutdown, `browser_engine.stop()` and
+  `close_db()` were called while the background task could still
+  be using them, causing race conditions, errors, and resource
+  leaks. Fixed: track background tasks in a set, await them
+  (with `return_exceptions`) during shutdown before stopping
+  browser engine and closing DB.
+
 ## [2.1.0] — 2025-08-12
 
 ### Bug Fixes

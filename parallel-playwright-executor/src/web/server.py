@@ -40,6 +40,7 @@ _container = None
 _notifier = NotificationSender()
 _cron_scheduler: CronScheduler | None = None
 _connected_ws: list[WebSocket] = []
+_bg_tasks: set[asyncio.Task[None]] = set()
 
 
 def _get_container():
@@ -88,7 +89,9 @@ async def _startup():
     global _cron_scheduler
     init_db()
     await create_tables()
-    _cron_scheduler = CronScheduler(_cron_task_runner, logger=_get_container().logger)
+    container = _get_container()
+    await container.resource_monitor.start(interval_s=2.0)
+    _cron_scheduler = CronScheduler(_cron_task_runner, logger=container.logger)
     await _cron_scheduler.start()
 
 
@@ -96,6 +99,9 @@ async def _startup():
 async def _shutdown():
     if _cron_scheduler:
         await _cron_scheduler.stop()
+    if _bg_tasks:
+        await asyncio.gather(*_bg_tasks, return_exceptions=True)
+        _bg_tasks.clear()
     if _container:
         await _container.resource_monitor.stop()
         await _container.browser_engine.stop()
@@ -193,7 +199,9 @@ async def api_run(
             await bg_db.commit()
         await _broadcast_update()
 
-    asyncio.create_task(_run())
+    t = asyncio.create_task(_run())
+    _bg_tasks.add(t)
+    t.add_done_callback(_bg_tasks.discard)
     return {"status": "started", "urls": urls, "workers": workers, "project_id": project_id}
 
 
