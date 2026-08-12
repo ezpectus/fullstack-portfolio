@@ -3,6 +3,8 @@
 ## [1.0.1] — Unreleased
 
 ### Fixed
+- **BUG-BOOK-FE-001:** Added missing .eslintrc.json and .prettierrc for code quality consistency (`frontend/.eslintrc.json`, `frontend/.prettierrc`)
+- **BUG-BOOK-FE-002:** Added missing Dockerfile.dev for frontend development (`frontend/Dockerfile.dev`)
 - **BUG-BOOK-BE-008:** Fixed .env path in env.ts from '../../.env' to '.env' for correct environment variable loading (`config/env.ts`)
 - **BUG-BOOK-DEP-001:** Added missing Dockerfile.backend for production Docker builds (`Dockerfile.backend`)
 
