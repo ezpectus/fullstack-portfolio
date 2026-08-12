@@ -592,6 +592,30 @@
   (with `return_exceptions`) during shutdown before stopping
   browser engine and closing DB.
 
+- **`runner.py` — `browser_engine` leak if
+  `resource_monitor.start()` fails** — In both `run_workflow`
+  and `run_benchmark`, `browser_engine.start()` was called
+  before `resource_monitor.start()`, but both calls were outside
+  the `try` block. If `resource_monitor.start()` raised an
+  exception, the `finally` block never executed, and the browser
+  engine was never stopped — leaking a Playwright process.
+  Fixed: move `resource_monitor.start()` inside the `try` block
+  so the `finally` block cleans up both resources.
+
+- **`runner.py` — `run_workflow` and `run_benchmark` stop
+  shared resources when called from web server context** — Both
+  functions unconditionally called `resource_monitor.stop()` and
+  `browser_engine.stop()` in their `finally` blocks. When called
+  from the web server (via `/api/run` or `_cron_task_runner`),
+  these resources are already managed by the server lifecycle.
+  After `run_workflow` completed, it stopped the browser engine
+  and resource monitor, breaking subsequent API calls:
+  `/api/status` returned `{"error": "Monitor not started"}`, and
+  the next `/api/run` had to restart the browser engine from
+  scratch. Fixed: track whether each resource was started by
+  this function (`started_engine`, `started_monitor` flags) and
+  only stop them if we started them.
+
 ## [2.1.0] — 2025-08-12
 
 ### Bug Fixes
