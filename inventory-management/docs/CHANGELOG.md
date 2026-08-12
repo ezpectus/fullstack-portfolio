@@ -5,6 +5,7 @@
 ### Security
 - **BUG-INV-MGMT-BE-013**: Removed insecure fallback values from `DATABASE_URL` and `REDIS_URL` — now use `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 - **BUG-INV-MGMT-BE-014**: Health endpoint `/api/health` already protected by rate limiter middleware — confirmed no DoS vulnerability (`app.ts`)
+- **BUG-INV-MGMT-BE-015**: Missing RBAC in stock-movements routes — list and create had no role checks. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF)` to both endpoints (`stock-movements.routes.ts`)
 
 ### Fixed
 - **BUG-INV-MGMT-BE-012:** Removed inconsistent "type": "module" from package.json to match CommonJS tsconfig configuration (`package.json`)

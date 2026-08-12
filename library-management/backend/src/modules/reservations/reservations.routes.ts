@@ -9,8 +9,8 @@ const router = Router();
 
 router.get('/', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN), validateQuery(reservationPaginationSchema), list);
 router.get('/:id', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN), validateParams(idParamSchema), getById);
-router.post('/', authenticate, validateBody(createReservationSchema), create);
-router.patch('/:id/cancel', authenticate, validateParams(idParamSchema), cancel);
+router.post('/', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN, ROLES.MEMBER), validateBody(createReservationSchema), create);
+router.patch('/:id/cancel', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN, ROLES.MEMBER), validateParams(idParamSchema), cancel);
 router.patch('/:id/fulfill', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN), validateParams(idParamSchema), validateBody(fulfillReservationSchema), fulfill);
 
 export default router;

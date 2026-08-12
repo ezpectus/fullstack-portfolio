@@ -27,6 +27,7 @@
 - CSV injection protection added to `exportCsv` — cells starting with `=+-@` are prefixed with `'` (`reports.service.ts`)
 - **BUG-LIB-BE-014**: Removed insecure fallback value from `REDIS_URL` — now uses `required()` without fallback to prevent running with default credentials (`config/env.ts`)
 - **BUG-LIB-BE-015**: Health endpoint `/api/health` already protected by rate limiter middleware — confirmed no DoS vulnerability (`app.ts`)
+- **BUG-LIB-BE-016**: Missing RBAC in reservations routes — create and cancel had no role checks. Added `requireRole(ROLES.ADMIN, ROLES.LIBRARIAN, ROLES.MEMBER)` to create and cancel (`reservations.routes.ts`)
 
 ## [1.0.0] — 2025-01-15
 
