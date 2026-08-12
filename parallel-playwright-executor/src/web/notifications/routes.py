@@ -68,6 +68,16 @@ async def create_channel(
     user: CurrentUser,
     db: Annotated[AsyncSession, Depends(get_session)],
 ):
+    if req.project_id is not None:
+        proj = await db.execute(
+            select(ProjectModel).where(
+                ProjectModel.id == req.project_id,
+                ProjectModel.owner_id == int(user["user_id"]),
+            )
+        )
+        if not proj.scalar_one_or_none():
+            raise HTTPException(404, "Project not found")
+
     ch = NotificationChannelModel(
         name=req.name,
         channel_type=req.channel_type,

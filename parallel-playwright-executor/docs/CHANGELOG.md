@@ -332,6 +332,56 @@
   has `PRAGMA foreign_keys = OFF` by default). Fixed: add
   `relationship` on both models with `cascade="all, delete-orphan"`.
 
+- **Deadlock in `RateLimiter.acquire` — domain lock held during
+  sleep** — `acquire` held the domain lock during
+  `asyncio.sleep(0.1)` while polling `request_count <
+  max_per_domain`. `release` also needs the domain lock. If a 4th
+  worker was waiting for a slot (holding the lock and sleeping), no
+  worker could call `release` for the same domain → deadlock.
+  Fixed: release the domain lock during the polling sleep, and
+  sleep for min_delay after successfully acquiring the slot (outside
+  the lock).
+
+- **`proxy_auth` not a valid httpx parameter in
+  `ProxyPoolManager.check_health`** — httpx `AsyncClient` has no
+  `proxy_auth` parameter; proxy credentials must be embedded in the
+  proxy URL. The previous fix passed `proxy_auth=(user, pass)` which
+  was silently ignored, so health checks for authenticated proxies
+  always failed. Fixed: embed credentials in the proxy URL as
+  `scheme://user:pass@host:port`.
+
+- **`CronScheduler._check_and_run` timezone mismatch —
+  `TypeError`** — `now = datetime.now(timezone.utc)` (aware)
+  compared with `sched.next_run_at` loaded from SQLite (naive —
+  SQLite strips timezone info). This raised `TypeError: can't
+  compare offset-naive and offset-aware datetimes` on every cron
+  check, silently breaking the entire scheduler loop. Fixed: use
+  `datetime.now(timezone.utc).replace(tzinfo=None)` for comparison.
+
+- **`create_schedule`, `create_channel`, and `api_run` accepted
+  arbitrary `project_id` without ownership validation** — Any
+  authenticated user could create schedules, notification channels,
+  or save task records to another user's project by passing that
+  project's ID. Fixed: validate `project_id` ownership via
+  `ProjectModel.owner_id == user["user_id"]` before creating
+  associated records in all three endpoints.
+
+- **`BaseAPIService._request` crashed on non-JSON API responses** —
+  `resp.json()` was called unconditionally on every API response.
+  SMS-Activate returns plain text (e.g. `ACCESS_BALANCE:123`,
+  `ACCESS_NUMBER:id:phone`), which is not valid JSON.
+  `json.JSONDecodeError` is not a subclass of `httpx.HTTPError`, so
+  it propagated unhandled, breaking all SMS-Activate API calls.
+  Fixed: try `resp.json()`, fall back to `resp.text` on parse
+  failure.
+
+- **`CronScheduler` never started in web server** —
+  `_cron_scheduler` was declared as `None` and never instantiated
+  or started in `_startup`. Schedules created via the API were
+  stored in the database but never executed — the cron loop never
+  ran. Fixed: create `CronScheduler` with a task runner in
+  `_startup` and call `start()`.
+
 ## [2.1.0] — 2025-08-12
 
 ### Bug Fixes

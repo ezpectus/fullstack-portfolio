@@ -77,6 +77,16 @@ async def create_schedule(
         if not croniter.croniter.is_valid(req.cron_expr):
             raise HTTPException(400, f"Invalid cron expression: {req.cron_expr}")
 
+        if req.project_id is not None:
+            proj = await db.execute(
+                select(ProjectModel).where(
+                    ProjectModel.id == req.project_id,
+                    ProjectModel.owner_id == int(user["user_id"]),
+                )
+            )
+            if not proj.scalar_one_or_none():
+                raise HTTPException(404, "Project not found")
+
         now = datetime.now(timezone.utc)
         cron = croniter.croniter(req.cron_expr, now)
         next_dt = cron.get_next(datetime)
