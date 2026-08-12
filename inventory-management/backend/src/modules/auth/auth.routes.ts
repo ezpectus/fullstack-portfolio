@@ -14,6 +14,6 @@ router.post('/login', authLimiter, validateBody(loginSchema), login);
 router.post('/refresh', authLimiter, validateBody(refreshSchema), refresh);
 router.post('/logout', authenticate, authLimiter, logout);
 router.get('/me', authenticate, me);
-router.post('/invite', authenticate, requireRole(ROLES.ADMIN), validateBody(inviteSchema), invite);
+router.post('/invite', authenticate, authLimiter, requireRole(ROLES.ADMIN), validateBody(inviteSchema), invite);
 
 export default router;
