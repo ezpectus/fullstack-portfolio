@@ -392,6 +392,41 @@
   before the `try` block and guard `page.close()` with a `None`
   check.
 
+- **Task metadata (retries, timestamps, duration) lost in
+  `run_workflow` results** — The `results` dict in `run_workflow`
+  return value only included `status`, `result`, `error`, and
+  `screenshot`. `retries`, `started_at`, `completed_at`, and
+  `duration_s` were computed in `TaskResult` but never exported.
+  `save_task_record` received `retries=0` and `duration_s=None`,
+  so all task records in the DB had zero retries and null/zero
+  duration. Fixed: include `retries`, `started_at`,
+  `completed_at`, `duration_s` in the results dict and pass them
+  to `save_task_record` in both `api_run` and `_cron_task_runner`.
+
+- **DB session held during entire task execution in
+  `CronScheduler._check_and_run`** — The session was opened before
+  iterating schedules and kept open while `_execute_schedule` ran
+  the task runner (which can take minutes). With SQLite+aiosqlite
+  (single connection), this blocked all other DB operations for
+  the entire task duration. Fixed: fetch due schedules in one
+  short-lived session, execute tasks outside any session, then
+  update schedule metadata in a separate short-lived session per
+  schedule.
+
+- **Insecure default JWT secret in `auth/service.py`** —
+  `SECRET_KEY` fell back to the string literal
+  `"change-me-in-production-use-env-var"` when
+  `WEB_JWT_SECRET` was not set. This is a well-known default
+  that attackers could use to forge tokens. Fixed: no fallback —
+  raises `RuntimeError` if `WEB_JWT_SECRET` is missing.
+
+- **Missing authentication on `/api/status` and `/api/config`
+  endpoints** — Both endpoints exposed system resource metrics
+  (CPU, RAM, disk, network) and application configuration
+  (browser type, worker count, proxy settings, rate limits,
+  fingerprint settings) to any unauthenticated user. Fixed: both
+  now require `CurrentUser` (JWT auth) dependency.
+
 ## [2.1.0] — 2025-08-12
 
 ### Bug Fixes
