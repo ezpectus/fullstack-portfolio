@@ -60,7 +60,7 @@ async def _cron_task_runner(task_config: dict[str, Any]) -> dict[str, Any]:
     urls = task_config.get("urls", [])
     workers = task_config.get("workers", 4)
     project_id = task_config.get("project_id")
-    result = await run_workflow(container, _task, urls, worker_count=workers)
+    result = await run_workflow(container, _task, urls, worker_count=workers, install_signals=False)
     if _session_factory is not None:
         async with _session_factory() as bg_db:
             for tid, r in result["results"].items():
@@ -100,7 +100,15 @@ async def _shutdown():
     if _cron_scheduler:
         await _cron_scheduler.stop()
     if _bg_tasks:
-        await asyncio.gather(*_bg_tasks, return_exceptions=True)
+        try:
+            await asyncio.wait_for(
+                asyncio.gather(*_bg_tasks, return_exceptions=True),
+                timeout=30.0,
+            )
+        except asyncio.TimeoutError:
+            for t in _bg_tasks:
+                t.cancel()
+            await asyncio.gather(*_bg_tasks, return_exceptions=True)
         _bg_tasks.clear()
     if _container:
         await _container.resource_monitor.stop()
@@ -171,7 +179,7 @@ async def api_run(
                 raise HTTPException(404, "Project not found")
 
     async def _run():
-        result = await run_workflow(container, _task, urls, worker_count=workers)
+        result = await run_workflow(container, _task, urls, worker_count=workers, install_signals=False)
         if _session_factory is None:
             return
         async with _session_factory() as bg_db:

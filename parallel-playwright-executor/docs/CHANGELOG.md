@@ -645,6 +645,25 @@
   Fixed: use the original `page` for the screenshot instead of
   opening a new blank one.
 
+- **`runner.py` — `GracefulShutdown.install()` overwrites server
+  signal handlers when called from web context** —
+  `run_workflow` always called `shutdown.install()` which
+  registers SIGINT/SIGTERM handlers. When `run_workflow` was
+  called from the web server (via `/api/run` or
+  `_cron_task_runner`), this overwrote the server's own signal
+  handlers, breaking the server's graceful shutdown. Fixed: add
+  `install_signals: bool = True` parameter; pass `False` from
+  server context.
+
+- **`server.py` — shutdown hangs indefinitely if background task
+  is stuck** — `asyncio.gather(*_bg_tasks, return_exceptions=True)`
+  had no timeout. If a background task was stuck (e.g., page
+  never loads, workflow with very long timeout), the shutdown
+  handler blocked forever, preventing the server from stopping.
+  Fixed: add 30-second timeout on the gather; if it times out,
+  cancel remaining tasks and gather again with
+  `return_exceptions=True` to ensure clean cleanup.
+
 ## [2.1.0] — 2025-08-12
 
 ### Bug Fixes
