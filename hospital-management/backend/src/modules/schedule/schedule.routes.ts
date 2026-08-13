@@ -12,7 +12,7 @@ const router = Router();
 const idParamSchema = z.object({ id: z.string().uuid() });
 const doctorIdParamSchema = z.object({ doctorId: z.string().uuid() });
 
-router.get('/:doctorId/working-hours', authenticate, validateParams(doctorIdParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/:doctorId/working-hours', authenticate, authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR'), validateParams(doctorIdParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const hours = await scheduleService.getWorkingHours(req.params.doctorId);
   res.json(hours);
 }));
@@ -32,7 +32,7 @@ router.delete('/working-hours/:id', authenticate, authorize('ADMIN', 'DOCTOR'), 
   res.status(204).send();
 }));
 
-router.get('/:doctorId/time-off', authenticate, validateParams(doctorIdParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/:doctorId/time-off', authenticate, authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR'), validateParams(doctorIdParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const timeOff = await scheduleService.getTimeOff(req.params.doctorId);
   res.json(timeOff);
 }));
@@ -47,7 +47,7 @@ router.delete('/time-off/:id', authenticate, authorize('ADMIN', 'DOCTOR'), valid
   res.status(204).send();
 }));
 
-router.get('/:doctorId/services', authenticate, validateParams(doctorIdParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/:doctorId/services', authenticate, authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR'), validateParams(doctorIdParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const services = await scheduleService.getServices(req.params.doctorId);
   res.json(services);
 }));

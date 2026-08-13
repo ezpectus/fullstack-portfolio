@@ -51,6 +51,7 @@
 - **BUG-HOS-BE-047**: Missing RBAC on dashboard route — any authenticated user could access dashboard overview. Added `authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR')` to `/dashboard` route (`dashboard.routes.ts`)
 - **BUG-HOS-BE-048**: Missing RBAC on medical-records list route — any authenticated user could list all medical records. Added `authorize('ADMIN', 'DOCTOR')` to `/medical-records` route (`medicalRecords.routes.ts`)
 - **BUG-HOS-BE-049**: Missing RBAC on notifications list route — any authenticated user could list all notifications. Added `authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR')` to `/notifications` route (`notifications.routes.ts`)
+- **BUG-HOS-BE-050**: Missing RBAC on schedule routes — any authenticated user could view working hours, time off, and services. Added `authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR')` to GET routes in schedule module (`schedule.routes.ts`)
 
 ### Fixed
 
