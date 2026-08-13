@@ -31,6 +31,7 @@
 - **BUG-HR-BE-023**: Generic Error usage in reports service — used `throw new Error()` instead of custom error class. Replaced with `BadRequestError` for proper error handling (`reports.service.ts`)
 - **BUG-HR-BE-024**: Missing rate limiting on invite route — `/invite` endpoint lacked `authRateLimiter`, creating potential DoS vector. Added `authRateLimiter` to prevent abuse (`auth.routes.ts`)
 - **BUG-HR-BE-025**: CORS origins used insecure fallback — `CORS_ORIGINS` had default localhost fallback, potentially allowing unintended origins in production. Changed to `required()` to force explicit configuration (`config/env.ts`)
+- **BUG-HR-BE-026**: Missing RBAC on departments list route — any authenticated user could list all departments. Added `authorize('HR_ADMIN', 'MANAGER')` to `/departments` route (`departments.routes.ts`)
 
 ### Fixed
 

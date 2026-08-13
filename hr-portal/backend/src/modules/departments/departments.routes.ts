@@ -10,7 +10,7 @@ import { createDepartmentSchema, updateDepartmentSchema, listDepartmentsSchema }
 const router = Router();
 const idParamSchema = z.object({ id: z.string().uuid() });
 
-router.get('/', authenticate, validateQuery(listDepartmentsSchema), asyncHandler(async (req, res) => {
+router.get('/', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateQuery(listDepartmentsSchema), asyncHandler(async (req, res) => {
   const query = listDepartmentsSchema.parse(req.query);
   const result = await departmentsService.list(query);
   res.json(result);
