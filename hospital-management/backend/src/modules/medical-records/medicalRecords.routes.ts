@@ -13,7 +13,7 @@ const appointmentIdParamSchema = z.object({ appointmentId: z.string().uuid() });
 
 router.use(authenticate);
 
-router.get('/', validateQuery(listMedicalRecordsQuerySchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/', authorize('ADMIN', 'DOCTOR'), validateQuery(listMedicalRecordsQuerySchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const query = listMedicalRecordsQuerySchema.parse(req.query);
   const result = await medicalRecordsService.list(query);
   res.json(result);
