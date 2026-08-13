@@ -34,6 +34,7 @@
 - **BUG-LIB-BE-020**: Missing RBAC on book-copies list route — any authenticated user could list all book copies. Added `requireRole(ROLES.ADMIN, ROLES.LIBRARIAN, ROLES.MEMBER)` to `/book-copies` route (`book-copies.routes.ts`)
 - **BUG-LIB-BE-021**: Missing RBAC on getById routes — any authenticated user could access individual resources. Added `requireRole(ROLES.ADMIN, ROLES.LIBRARIAN, ROLES.MEMBER)` to GET /:id routes in books and book-copies modules (`books.routes.ts`, `book-copies.routes.ts`)
 - **BUG-LIB-BE-022**: Missing RBAC on dashboard route — any authenticated user could access dashboard stats. Added `requireRole(ROLES.ADMIN, ROLES.LIBRARIAN)` to `/dashboard` route (`dashboard.routes.ts`)
+- **BUG-LIB-BE-023**: CORS origins used insecure fallback — `CORS_ORIGINS` had default localhost fallback, potentially allowing unintended origins in production. Changed to `required()` to force explicit configuration (`config/env.ts`)
 
 ## [1.0.0] — 2025-01-15
 
