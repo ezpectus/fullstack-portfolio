@@ -37,6 +37,11 @@ All notable changes to this project will be documented in this file.
 - **BUG-ECOM-BE-033**: Missing RBAC in dashboard routes — any authenticated user could access dashboard overview. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER)` to dashboard route (`dashboard.routes.ts`)
 - **BUG-ECOM-BE-034**: Missing RBAC in analytics routes — any authenticated user could access analytics data. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER)` to all analytics routes (`analytics.routes.ts`)
 - **BUG-ECOM-BE-035**: Query parameter validation bypass in analytics controller — used `req.query as string` and manual `parseInt` without validation. Added `dateRangeSchema` and `limitSchema` with Zod validation (`analytics.controller.ts`)
+- **BUG-ECOM-BE-036**: Missing RBAC on categories list routes — any authenticated user could list all categories and access tree view. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/categories` and `/categories/tree` routes (`categories.routes.ts`)
+- **BUG-ECOM-BE-037**: Missing RBAC on customers list route — any authenticated user could list all customers. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/customers` route (`customers.routes.ts`)
+- **BUG-ECOM-BE-038**: Missing RBAC on orders list route — any authenticated user could list all orders. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/orders` route (`orders.routes.ts`)
+- **BUG-ECOM-BE-039**: Missing RBAC on products list route — any authenticated user could list all products. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/products` route (`products.routes.ts`)
+- **BUG-ECOM-BE-040**: Missing RBAC on promo-codes list route — any authenticated user could list all promo codes. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/promo-codes` route (`promo-codes.routes.ts`)
 
 ### Fixed
 
