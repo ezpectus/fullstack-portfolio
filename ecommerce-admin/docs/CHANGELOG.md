@@ -42,6 +42,7 @@ All notable changes to this project will be documented in this file.
 - **BUG-ECOM-BE-038**: Missing RBAC on orders list route — any authenticated user could list all orders. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/orders` route (`orders.routes.ts`)
 - **BUG-ECOM-BE-039**: Missing RBAC on products list route — any authenticated user could list all products. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/products` route (`products.routes.ts`)
 - **BUG-ECOM-BE-040**: Missing RBAC on promo-codes list route — any authenticated user could list all promo codes. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/promo-codes` route (`promo-codes.routes.ts`)
+- **BUG-ECOM-BE-041**: Missing RBAC on getById routes — any authenticated user could access individual resources. Added `requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF)` to GET /:id routes in categories, customers, orders, products, and promo-codes modules (`categories.routes.ts`, `customers.routes.ts`, `orders.routes.ts`, `products.routes.ts`, `promo-codes.routes.ts`)
 
 ### Fixed
 

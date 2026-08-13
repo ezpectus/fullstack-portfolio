@@ -12,7 +12,7 @@ const idParamSchema = z.object({ id: z.string().uuid() });
 router.use(authenticate);
 
 router.get('/', requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF), ...list);
-router.get('/:id', validateParams(idParamSchema), ...getById);
+router.get('/:id', requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF), validateParams(idParamSchema), ...getById);
 router.post('/', requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER), ...create);
 router.patch('/:id/status', requireRole(ROLES.SUPER_ADMIN, ROLES.MANAGER, ROLES.STAFF), validateParams(idParamSchema), ...updateStatus);
 
