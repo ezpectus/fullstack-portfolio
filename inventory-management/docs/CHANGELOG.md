@@ -17,6 +17,7 @@
 - **BUG-INV-MGMT-BE-024**: Missing RBAC on suppliers list route — any authenticated user could list all suppliers. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/suppliers` route (`suppliers.routes.ts`)
 - **BUG-INV-MGMT-BE-025**: Missing RBAC on warehouses list route — any authenticated user could list all warehouses. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/warehouses` route (`warehouses.routes.ts`)
 - **BUG-INV-MGMT-BE-026**: Missing RBAC on purchase-orders list route — any authenticated user could list all purchase orders. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/purchase-orders` route (`purchase-orders.routes.ts`)
+- **BUG-INV-MGMT-BE-027**: Missing RBAC on getById routes — any authenticated user could access individual resources. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF)` to GET /:id and GET /:id/stock routes in categories, products, suppliers, warehouses, and purchase-orders modules (`categories.routes.ts`, `products.routes.ts`, `suppliers.routes.ts`, `warehouses.routes.ts`, `purchase-orders.routes.ts`)
 
 ### Fixed
 - **BUG-INV-MGMT-BE-012:** Removed inconsistent "type": "module" from package.json to match CommonJS tsconfig configuration (`package.json`)

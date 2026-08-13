@@ -11,8 +11,8 @@ const router = Router();
 const idParamSchema = z.object({ id: z.string().uuid() });
 
 router.get('/', authenticate, requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF), ...warehouseController.list);
-router.get('/:id', authenticate, validateParams(idParamSchema), ...warehouseController.getById);
-router.get('/:id/stock', authenticate, validateParams(idParamSchema), ...warehouseController.getStock);
+router.get('/:id', authenticate, requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF), validateParams(idParamSchema), ...warehouseController.getById);
+router.get('/:id/stock', authenticate, requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF), validateParams(idParamSchema), ...warehouseController.getStock);
 router.post('/', authenticate, requireRole(ROLES.ADMIN), ...warehouseController.create);
 router.patch('/:id', authenticate, validateParams(idParamSchema), requireRole(ROLES.ADMIN), ...warehouseController.update);
 router.delete('/:id', authenticate, validateParams(idParamSchema), requireRole(ROLES.ADMIN), ...warehouseController.delete);

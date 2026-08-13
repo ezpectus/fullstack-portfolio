@@ -11,7 +11,7 @@ const router = Router();
 const idParamSchema = z.object({ id: z.string().uuid() });
 
 router.get('/', authenticate, requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF), ...categoryController.list);
-router.get('/:id', authenticate, validateParams(idParamSchema), ...categoryController.getById);
+router.get('/:id', authenticate, requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF), validateParams(idParamSchema), ...categoryController.getById);
 router.post('/', authenticate, requireRole(ROLES.ADMIN, ROLES.MANAGER), ...categoryController.create);
 router.patch('/:id', authenticate, validateParams(idParamSchema), requireRole(ROLES.ADMIN, ROLES.MANAGER), ...categoryController.update);
 router.delete('/:id', authenticate, validateParams(idParamSchema), requireRole(ROLES.ADMIN), ...categoryController.delete);
