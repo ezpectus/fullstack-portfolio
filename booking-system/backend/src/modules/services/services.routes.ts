@@ -20,7 +20,7 @@ router.use(authenticate);
  *     tags: [Services]
  */
 router.get('/', requireRole(ROLES.ADMIN, ROLES.PROVIDER), ...list);
-router.get('/:id', validateParams(idParamSchema), ...getById);
+router.get('/:id', requireRole(ROLES.ADMIN, ROLES.PROVIDER), validateParams(idParamSchema), ...getById);
 router.post('/', requireRole(ROLES.ADMIN), ...create);
 router.patch('/:id', validateParams(idParamSchema), requireRole(ROLES.ADMIN), ...update);
 router.delete('/:id', validateParams(idParamSchema), requireRole(ROLES.ADMIN), ...remove);

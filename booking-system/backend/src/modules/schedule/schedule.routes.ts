@@ -13,8 +13,8 @@ const blockIdSchema = z.object({ id: z.string().uuid() });
 
 router.use(authenticate);
 
-router.get('/:providerId', validateParams(providerIdSchema), ...getSchedule);
-router.get('/:providerId/slots', validateParams(providerIdSchema), ...getSlots);
+router.get('/:providerId', requireRole(ROLES.ADMIN, ROLES.PROVIDER), validateParams(providerIdSchema), ...getSchedule);
+router.get('/:providerId/slots', requireRole(ROLES.ADMIN, ROLES.PROVIDER), validateParams(providerIdSchema), ...getSlots);
 router.post('/block', requireRole(ROLES.ADMIN, ROLES.PROVIDER), ...block);
 router.delete('/block/:id', validateParams(blockIdSchema), requireRole(ROLES.ADMIN, ROLES.PROVIDER), ...unblock);
 

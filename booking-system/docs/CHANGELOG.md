@@ -37,6 +37,7 @@
 - **BUG-BOOK-BE-028**: Missing RBAC on providers list route — any authenticated user could list all providers. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to `/providers` route (`providers.routes.ts`)
 - **BUG-BOOK-BE-029**: Missing RBAC on services list route — any authenticated user could list all services. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to `/services` route (`services.routes.ts`)
 - **BUG-BOOK-BE-030**: Missing RBAC on notifications list route — any authenticated user could list all notifications. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to `/notifications` route (`notifications.routes.ts`)
+- **BUG-BOOK-BE-031**: Missing RBAC on getById routes — any authenticated user could access individual resources. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to GET /:id routes in bookings, customers, providers, services, and schedule modules (`bookings.routes.ts`, `customers.routes.ts`, `providers.routes.ts`, `services.routes.ts`, `schedule.routes.ts`)
 
 ### Fixed
 
