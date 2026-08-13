@@ -27,12 +27,12 @@ router.get('/unread-count', asyncHandler(async (req: AuthRequest, res: Response)
   res.json({ count });
 }));
 
-router.patch('/:id/read', validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.patch('/:id/read', authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR'), validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const notif = await notificationsService.markAsRead(req.params.id, req.user!.userId);
   res.json(notif);
 }));
 
-router.patch('/mark-all-read', asyncHandler(async (req: AuthRequest, res: Response) => {
+router.patch('/mark-all-read', authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR'), asyncHandler(async (req: AuthRequest, res: Response) => {
   await notificationsService.markAllAsRead(req.user!.userId);
   res.json({ message: 'All notifications marked as read' });
 }));
