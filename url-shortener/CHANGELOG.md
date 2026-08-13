@@ -9,6 +9,7 @@
 - **BUG-URL-BE-004**: Query parameter validation bypass in redirect route — used unsafe type casting `req.query.password as string | undefined`. Added `passwordQuerySchema` with Zod validation (`redirect.routes.ts`)
 - **BUG-URL-BE-005**: Missing parameter validation in redirect route — `:code` parameter lacked validation. Added `codeParamSchema` with Zod validation to ensure code is alphanumeric with allowed characters (`redirect.routes.ts`)
 - **BUG-URL-BE-006**: Unnecessary rate limiting on /me endpoint — `/me` had `authRateLimiter` which is redundant since it's already protected by `authenticate` and global API rate limiter. Removed redundant rate limiter (`auth.routes.ts`)
+- **BUG-URL-BE-007**: Query parameter validation bypass in links controller — used `req.query as unknown as ...` instead of validated schema. Fixed to use `linkQuerySchema.parse(req.query)` (`links.controller.ts`)
 
 ## [1.0.0] — 2025-01-15
 

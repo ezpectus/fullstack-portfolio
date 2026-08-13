@@ -3,10 +3,12 @@ import { linksService } from './links.service';
 import { AuthRequest } from '../../middleware/auth';
 import { env } from '../../config/env';
 import { asyncHandler } from '../../middleware/asyncHandler';
+import { linkQuerySchema } from './links.dto';
 
 export const linksController = {
   list: asyncHandler(async (req: AuthRequest, res: Response) => {
-    const result = await linksService.list(req.user!.id, req.query as unknown as { page: number; limit: number; search?: string; status?: string; sort: string; order: string });
+    const query = linkQuerySchema.parse(req.query);
+    const result = await linksService.list(req.user!.id, query);
     res.json(result);
   }),
 
