@@ -36,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **BUG-CRM-BE-017**: Missing RBAC on deals list routes — any authenticated user could list all deals and access kanban view. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP)` to `/deals` and `/deals/kanban` routes (`deals.routes.ts`)
 - **BUG-CRM-BE-018**: Missing RBAC on notes list route — any authenticated user could list all notes. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP)` to `/notes` route (`notes.routes.ts`)
 - **BUG-CRM-BE-019**: Missing RBAC on getById routes — any authenticated user could access individual resources. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP)` to GET /:id and GET /:id/timeline routes in customers, deals, and notes modules (`customers.routes.ts`, `deals.routes.ts`, `notes.routes.ts`)
+- **BUG-CRM-BE-020**: CORS origins used insecure fallback — `CORS_ORIGINS` had default localhost fallback, potentially allowing unintended origins in production. Changed to `required()` to force explicit configuration (`config/env.ts`)
 
 ### Added
 - Initial project structure
