@@ -42,7 +42,7 @@ export const env = {
   jwtRefreshExpiryMs: parseDuration(optional('JWT_REFRESH_EXPIRES_IN', '7d')),
   bcryptSaltRounds: optionalInt('BCRYPT_SALT_ROUNDS', 10),
   cors: {
-    origins: optional('CORS_ORIGINS', 'http://localhost:3000,http://localhost:5173').split(','),
+    origins: required('CORS_ORIGINS').split(','),
   },
   redis: {
     url: required('REDIS_URL'),
