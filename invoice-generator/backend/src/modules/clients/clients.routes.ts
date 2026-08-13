@@ -12,7 +12,7 @@ const router = Router();
 
 router.use(authenticate);
 
-router.get('/', validateQuery(clientPaginationSchema), listClients);
+router.get('/', requireRole('OWNER', 'ACCOUNTANT', 'VIEWER'), validateQuery(clientPaginationSchema), listClients);
 router.get('/:id', validateParams(idParamSchema), getClient);
 router.get('/:id/balance', validateParams(idParamSchema), getClientBalance);
 router.post('/', requireRole('OWNER', 'ACCOUNTANT'), validateBody(createClientSchema), createClient);

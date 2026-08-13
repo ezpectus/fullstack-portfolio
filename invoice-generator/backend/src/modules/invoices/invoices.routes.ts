@@ -12,7 +12,7 @@ const router = Router();
 
 router.use(authenticate);
 
-router.get('/', validateQuery(invoicePaginationSchema), listInvoices);
+router.get('/', requireRole('OWNER', 'ACCOUNTANT', 'VIEWER'), validateQuery(invoicePaginationSchema), listInvoices);
 router.get('/:id', validateParams(idParamSchema), getInvoice);
 router.post('/', requireRole('OWNER', 'ACCOUNTANT'), validateBody(createInvoiceSchema), createInvoice);
 router.patch('/:id', validateParams(idParamSchema), requireRole('OWNER', 'ACCOUNTANT'), validateBody(updateInvoiceSchema), updateInvoice);

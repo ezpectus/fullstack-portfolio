@@ -12,7 +12,7 @@ const router = Router();
 
 router.use(authenticate);
 
-router.get('/', validateQuery(templatePaginationSchema), listTemplates);
+router.get('/', requireRole('OWNER', 'ACCOUNTANT', 'VIEWER'), validateQuery(templatePaginationSchema), listTemplates);
 router.get('/:id', validateParams(idParamSchema), getTemplate);
 router.post('/', requireRole('OWNER', 'ACCOUNTANT'), validateBody(createTemplateSchema), createTemplate);
 router.patch('/:id', requireRole('OWNER', 'ACCOUNTANT'), validateParams(idParamSchema), validateBody(updateTemplateSchema), updateTemplate);
