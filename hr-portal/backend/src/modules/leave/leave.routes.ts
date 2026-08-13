@@ -17,20 +17,20 @@ router.get('/', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateQuery(li
   res.json(result);
 }));
 
-router.get('/types', authenticate, asyncHandler(async (_req, res) => {
+router.get('/types', authenticate, authorize('HR_ADMIN', 'MANAGER'), asyncHandler(async (_req, res) => {
   const types = await leaveService.getLeaveTypes();
   res.json(types);
 }));
 
 const yearSchema = z.object({ year: z.coerce.number().optional() });
 
-router.get('/balance/:employeeId', authenticate, validateParams(employeeIdParamSchema), validateQuery(yearSchema), asyncHandler(async (req, res) => {
+router.get('/balance/:employeeId', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateParams(employeeIdParamSchema), validateQuery(yearSchema), asyncHandler(async (req, res) => {
   const query = yearSchema.parse(req.query);
   const balance = await leaveService.getBalance(req.params.employeeId, query.year);
   res.json(balance);
 }));
 
-router.get('/:id', authenticate, validateParams(idParamSchema), asyncHandler(async (req, res) => {
+router.get('/:id', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateParams(idParamSchema), asyncHandler(async (req, res) => {
   const lr = await leaveService.getById(req.params.id);
   res.json(lr);
 }));

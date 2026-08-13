@@ -33,6 +33,7 @@
 - **BUG-HR-BE-025**: CORS origins used insecure fallback — `CORS_ORIGINS` had default localhost fallback, potentially allowing unintended origins in production. Changed to `required()` to force explicit configuration (`config/env.ts`)
 - **BUG-HR-BE-026**: Missing RBAC on departments list route — any authenticated user could list all departments. Added `authorize('HR_ADMIN', 'MANAGER')` to `/departments` route (`departments.routes.ts`)
 - **BUG-HR-BE-027**: Missing RBAC on notifications list route — any authenticated user could list all notifications. Added `authorize('HR_ADMIN', 'MANAGER')` to `/notifications` route (`notifications.routes.ts`)
+- **BUG-HR-BE-028**: Missing RBAC on leave routes — any authenticated user could access leave types, balance, and individual leave requests. Added `authorize('HR_ADMIN', 'MANAGER')` to GET routes in leave module (`leave.routes.ts`)
 
 ### Fixed
 
