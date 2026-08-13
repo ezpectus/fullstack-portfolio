@@ -22,7 +22,7 @@ router.get('/', authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR'), validateQuery(list
   res.json(result);
 }));
 
-router.get('/unread-count', asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/unread-count', authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR'), asyncHandler(async (req: AuthRequest, res: Response) => {
   const count = await notificationsService.getUnreadCount(req.user!.userId);
   res.json({ count });
 }));
