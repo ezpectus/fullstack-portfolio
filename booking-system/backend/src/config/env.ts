@@ -59,7 +59,7 @@ export const env = {
   },
 
   cors: {
-    origins: optional('CORS_ORIGINS', 'http://localhost:3000,http://localhost:5173').split(','),
+    origins: required('CORS_ORIGINS').split(','),
   },
 
   smtp: {
