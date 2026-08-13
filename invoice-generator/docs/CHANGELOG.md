@@ -13,6 +13,7 @@
 - **BUG-INV-BE-017**: Missing RBAC on invoices list route — any authenticated user could list all invoices. Added `requireRole('OWNER', 'ACCOUNTANT', 'VIEWER')` to `/invoices` route (`invoices.routes.ts`)
 - **BUG-INV-BE-018**: Missing RBAC on templates list route — any authenticated user could list all templates. Added `requireRole('OWNER', 'ACCOUNTANT', 'VIEWER')` to `/templates` route (`templates.routes.ts`)
 - **BUG-INV-BE-019**: Missing RBAC on users list route — any authenticated user could list all users. Added `requireRole('OWNER')` to `/users` route (`users.routes.ts`)
+- **BUG-INV-BE-020**: CORS origins used insecure fallback — `CORS_ORIGINS` had default localhost fallback, potentially allowing unintended origins in production. Changed to `required()` to force explicit configuration (`config/env.ts`)
 
 ### Fixed
 - **BUG-INV-BE-009:** Added missing prisma scripts (prisma:generate, prisma:migrate, prisma:seed, prisma:studio) to package.json (`package.json`)

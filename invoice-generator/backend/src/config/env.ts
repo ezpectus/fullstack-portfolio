@@ -40,7 +40,7 @@ export const env = {
   },
   bcryptSaltRounds: optionalInt('BCRYPT_SALT_ROUNDS', 10),
   cors: {
-    origins: optional('CORS_ORIGINS', 'http://localhost:5173,http://localhost:3000').split(','),
+    origins: required('CORS_ORIGINS').split(','),
   },
   rateLimit: {
     windowMs: optionalInt('RATE_LIMIT_WINDOW_MS', 15 * 60 * 1000),
