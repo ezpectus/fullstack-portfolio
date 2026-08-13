@@ -32,6 +32,7 @@
 - **BUG-HR-BE-024**: Missing rate limiting on invite route — `/invite` endpoint lacked `authRateLimiter`, creating potential DoS vector. Added `authRateLimiter` to prevent abuse (`auth.routes.ts`)
 - **BUG-HR-BE-025**: CORS origins used insecure fallback — `CORS_ORIGINS` had default localhost fallback, potentially allowing unintended origins in production. Changed to `required()` to force explicit configuration (`config/env.ts`)
 - **BUG-HR-BE-026**: Missing RBAC on departments list route — any authenticated user could list all departments. Added `authorize('HR_ADMIN', 'MANAGER')` to `/departments` route (`departments.routes.ts`)
+- **BUG-HR-BE-027**: Missing RBAC on notifications list route — any authenticated user could list all notifications. Added `authorize('HR_ADMIN', 'MANAGER')` to `/notifications` route (`notifications.routes.ts`)
 
 ### Fixed
 

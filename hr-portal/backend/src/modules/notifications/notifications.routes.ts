@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { z } from 'zod';
 import notificationsService from './notifications.service';
 import { authenticate, AuthRequest } from '../../middleware/auth';
+import { authorize } from '../../middleware/rbac';
 import { asyncHandler } from '../../middleware/asyncHandler';
 import { validateParams, validateQuery } from '../../middleware/validate';
 
@@ -13,7 +14,7 @@ const listNotificationsSchema = z.object({
   isRead: z.enum(['true', 'false']).optional(),
 });
 
-router.get('/', authenticate, validateQuery(listNotificationsSchema), asyncHandler(async (req: AuthRequest, res) => {
+router.get('/', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateQuery(listNotificationsSchema), asyncHandler(async (req: AuthRequest, res) => {
   const query = listNotificationsSchema.parse(req.query);
   const result = await notificationsService.list(req.user!.userId, {
     page: query.page,
