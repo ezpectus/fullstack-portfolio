@@ -14,8 +14,8 @@ const idParamSchema = z.object({ id: z.string().uuid() });
 router.use(authenticate);
 
 router.get('/', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateQuery(customerQuerySchema), customersController.list);
-router.get('/:id', validateParams(idParamSchema), customersController.getById);
-router.get('/:id/timeline', validateParams(idParamSchema), customersController.timeline);
+router.get('/:id', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateParams(idParamSchema), customersController.getById);
+router.get('/:id/timeline', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateParams(idParamSchema), customersController.timeline);
 router.post('/', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateBody(createCustomerSchema), customersController.create);
 router.put('/:id', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateParams(idParamSchema), validateBody(updateCustomerSchema), customersController.update);
 router.delete('/:id', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateParams(idParamSchema), customersController.delete);

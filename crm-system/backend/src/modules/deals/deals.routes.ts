@@ -15,7 +15,7 @@ router.use(authenticate);
 
 router.get('/kanban', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), dealsController.kanban);
 router.get('/', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateQuery(dealQuerySchema), dealsController.list);
-router.get('/:id', validateParams(idParamSchema), dealsController.getById);
+router.get('/:id', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateParams(idParamSchema), dealsController.getById);
 router.post('/', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateBody(createDealSchema), dealsController.create);
 router.put('/:id', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateParams(idParamSchema), validateBody(updateDealSchema), dealsController.update);
 router.delete('/:id', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateParams(idParamSchema), dealsController.delete);
