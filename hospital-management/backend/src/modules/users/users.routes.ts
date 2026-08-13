@@ -17,7 +17,7 @@ router.get('/', authenticate, authorize('ADMIN'), asyncHandler(async (req: AuthR
   res.json(result);
 }));
 
-router.get('/:id', authenticate, validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/:id', authenticate, authorize('ADMIN'), validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const user = await usersService.getById(req.params.id);
   res.json(user);
 }));

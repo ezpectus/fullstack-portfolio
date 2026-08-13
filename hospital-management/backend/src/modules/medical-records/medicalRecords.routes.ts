@@ -19,12 +19,12 @@ router.get('/', authorize('ADMIN', 'DOCTOR'), validateQuery(listMedicalRecordsQu
   res.json(result);
 }));
 
-router.get('/appointment/:appointmentId', validateParams(appointmentIdParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/appointment/:appointmentId', authorize('ADMIN', 'DOCTOR'), validateParams(appointmentIdParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const record = await medicalRecordsService.getByAppointmentId(req.params.appointmentId);
   res.json(record);
 }));
 
-router.get('/:id', validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/:id', authorize('ADMIN', 'DOCTOR'), validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const record = await medicalRecordsService.getById(req.params.id);
   res.json(record);
 }));
