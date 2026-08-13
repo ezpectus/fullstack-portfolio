@@ -38,6 +38,7 @@
 - **BUG-HR-BE-030**: Missing RBAC on notifications post routes — any authenticated user could mark notifications as read. Added `authorize('HR_ADMIN', 'MANAGER')` to POST routes in notifications module (`notifications.routes.ts`)
 - **BUG-HR-BE-031**: Missing RBAC on notifications delete route — any authenticated user could delete notifications. Added `authorize('HR_ADMIN', 'MANAGER')` to DELETE route in notifications module (`notifications.routes.ts`)
 - **BUG-HR-BE-032**: Missing RBAC on leave post routes — any authenticated user could create and cancel leave requests. Added `authorize('HR_ADMIN', 'MANAGER')` to POST routes in leave module (`leave.routes.ts`)
+- **BUG-HR-BE-033**: Missing RBAC on notifications unread-count route — any authenticated user could access unread count. Added `authorize('HR_ADMIN', 'MANAGER')` to GET /unread-count route (`notifications.routes.ts`)
 
 ### Fixed
 

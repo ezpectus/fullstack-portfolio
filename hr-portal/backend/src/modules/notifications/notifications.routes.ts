@@ -24,7 +24,7 @@ router.get('/', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateQuery(li
   res.json(result);
 }));
 
-router.get('/unread-count', authenticate, asyncHandler(async (req: AuthRequest, res) => {
+router.get('/unread-count', authenticate, authorize('HR_ADMIN', 'MANAGER'), asyncHandler(async (req: AuthRequest, res) => {
   const count = await notificationsService.getUnreadCount(req.user!.userId);
   res.json({ count });
 }));
