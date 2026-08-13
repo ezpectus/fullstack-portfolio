@@ -12,7 +12,7 @@ const idParamSchema = z.object({ id: z.string().uuid() });
 
 router.use(authenticate);
 
-router.get('/', validateQuery(listNotificationsQuerySchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/', authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR'), validateQuery(listNotificationsQuerySchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   const query = listNotificationsQuerySchema.parse(req.query);
   const result = await notificationsService.list(req.user!.userId, {
     page: query.page,
