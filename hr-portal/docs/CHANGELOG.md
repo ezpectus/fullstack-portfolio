@@ -34,6 +34,7 @@
 - **BUG-HR-BE-026**: Missing RBAC on departments list route — any authenticated user could list all departments. Added `authorize('HR_ADMIN', 'MANAGER')` to `/departments` route (`departments.routes.ts`)
 - **BUG-HR-BE-027**: Missing RBAC on notifications list route — any authenticated user could list all notifications. Added `authorize('HR_ADMIN', 'MANAGER')` to `/notifications` route (`notifications.routes.ts`)
 - **BUG-HR-BE-028**: Missing RBAC on leave routes — any authenticated user could access leave types, balance, and individual leave requests. Added `authorize('HR_ADMIN', 'MANAGER')` to GET routes in leave module (`leave.routes.ts`)
+- **BUG-HR-BE-029**: Missing RBAC on departments getById route — any authenticated user could access individual department. Added `authorize('HR_ADMIN', 'MANAGER')` to GET /:id route (`departments.routes.ts`)
 
 ### Fixed
 

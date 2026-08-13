@@ -16,7 +16,7 @@ router.get('/', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateQuery(li
   res.json(result);
 }));
 
-router.get('/:id', authenticate, validateParams(idParamSchema), asyncHandler(async (req, res) => {
+router.get('/:id', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateParams(idParamSchema), asyncHandler(async (req, res) => {
   const dept = await departmentsService.getById(req.params.id);
   res.json(dept);
 }));
