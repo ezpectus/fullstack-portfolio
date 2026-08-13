@@ -13,7 +13,7 @@ const idParamSchema = z.object({ id: z.string().uuid() });
 
 router.use(authenticate);
 
-router.get('/', validateQuery(noteQuerySchema), notesController.list);
+router.get('/', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateQuery(noteQuerySchema), notesController.list);
 router.get('/:id', validateParams(idParamSchema), notesController.getById);
 router.post('/', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateBody(createNoteSchema), notesController.create);
 router.put('/:id', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateParams(idParamSchema), validateBody(updateNoteSchema), notesController.update);

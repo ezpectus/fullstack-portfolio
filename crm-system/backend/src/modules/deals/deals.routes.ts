@@ -13,8 +13,8 @@ const idParamSchema = z.object({ id: z.string().uuid() });
 
 router.use(authenticate);
 
-router.get('/kanban', dealsController.kanban);
-router.get('/', validateQuery(dealQuerySchema), dealsController.list);
+router.get('/kanban', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), dealsController.kanban);
+router.get('/', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateQuery(dealQuerySchema), dealsController.list);
 router.get('/:id', validateParams(idParamSchema), dealsController.getById);
 router.post('/', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateBody(createDealSchema), dealsController.create);
 router.put('/:id', requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.SALES_REP), validateParams(idParamSchema), validateBody(updateDealSchema), dealsController.update);
