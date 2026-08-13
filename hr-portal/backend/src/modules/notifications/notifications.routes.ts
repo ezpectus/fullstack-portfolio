@@ -29,17 +29,17 @@ router.get('/unread-count', authenticate, asyncHandler(async (req: AuthRequest, 
   res.json({ count });
 }));
 
-router.post('/:id/read', authenticate, validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res) => {
+router.post('/:id/read', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res) => {
   const notif = await notificationsService.markAsRead(req.params.id, req.user!.userId);
   res.json(notif);
 }));
 
-router.post('/read-all', authenticate, asyncHandler(async (req: AuthRequest, res) => {
+router.post('/read-all', authenticate, authorize('HR_ADMIN', 'MANAGER'), asyncHandler(async (req: AuthRequest, res) => {
   await notificationsService.markAllAsRead(req.user!.userId);
   res.status(204).send();
 }));
 
-router.delete('/:id', authenticate, validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res) => {
+router.delete('/:id', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res) => {
   await notificationsService.delete(req.params.id, req.user!.userId);
   res.status(204).send();
 }));
