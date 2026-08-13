@@ -8,7 +8,7 @@ const router = Router();
 
 router.use(authenticate);
 
-router.get('/', ...list);
+router.get('/', requireRole(ROLES.ADMIN, ROLES.PROVIDER), ...list);
 router.post('/send', requireRole(ROLES.ADMIN), ...send);
 
 export default router;

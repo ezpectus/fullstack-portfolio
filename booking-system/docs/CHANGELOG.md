@@ -32,6 +32,11 @@
 - **BUG-BOOK-BE-023**: Missing body validation on refresh route — `/refresh` endpoint lacked `validateBody` middleware. Added `validateBody(refreshSchema)` to ensure request body is validated (`auth.controller.ts`)
 - **BUG-BOOK-BE-024**: Health endpoint `/api/health` was defined before API rate limiter, creating potential DoS vector. Removed duplicate health endpoint definition and ensured rate limiter applies to all `/api` routes (`app.ts`)
 - **BUG-BOOK-BE-025**: Missing rate limiting on invite route — `/invite` endpoint lacked `authRateLimiter`, creating potential DoS vector. Added `authRateLimiter` to prevent abuse (`auth.routes.ts`)
+- **BUG-BOOK-BE-026**: Missing RBAC on bookings list route — any authenticated user could list all bookings. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to `/bookings` route (`bookings.routes.ts`)
+- **BUG-BOOK-BE-027**: Missing RBAC on customers list route — any authenticated user could list all customers. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to `/customers` route (`customers.routes.ts`)
+- **BUG-BOOK-BE-028**: Missing RBAC on providers list route — any authenticated user could list all providers. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to `/providers` route (`providers.routes.ts`)
+- **BUG-BOOK-BE-029**: Missing RBAC on services list route — any authenticated user could list all services. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to `/services` route (`services.routes.ts`)
+- **BUG-BOOK-BE-030**: Missing RBAC on notifications list route — any authenticated user could list all notifications. Added `requireRole(ROLES.ADMIN, ROLES.PROVIDER)` to `/notifications` route (`notifications.routes.ts`)
 
 ### Fixed
 

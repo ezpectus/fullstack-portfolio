@@ -19,7 +19,7 @@ router.use(authenticate);
  *     summary: List services
  *     tags: [Services]
  */
-router.get('/', ...list);
+router.get('/', requireRole(ROLES.ADMIN, ROLES.PROVIDER), ...list);
 router.get('/:id', validateParams(idParamSchema), ...getById);
 router.post('/', requireRole(ROLES.ADMIN), ...create);
 router.patch('/:id', validateParams(idParamSchema), requireRole(ROLES.ADMIN), ...update);
