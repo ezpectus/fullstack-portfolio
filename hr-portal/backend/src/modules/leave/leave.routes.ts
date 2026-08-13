@@ -35,7 +35,7 @@ router.get('/:id', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateParam
   res.json(lr);
 }));
 
-router.post('/', authenticate, validateBody(createLeaveRequestSchema), asyncHandler(async (req, res) => {
+router.post('/', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateBody(createLeaveRequestSchema), asyncHandler(async (req, res) => {
   const lr = await leaveService.create(req.body);
   res.status(201).json(lr);
 }));
@@ -45,7 +45,7 @@ router.post('/:id/approve', authenticate, authorize('HR_ADMIN', 'MANAGER'), vali
   res.json(lr);
 }));
 
-router.post('/:id/cancel', authenticate, validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res) => {
+router.post('/:id/cancel', authenticate, authorize('HR_ADMIN', 'MANAGER'), validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res) => {
   const lr = await leaveService.cancel(req.params.id, req.user!.userId);
   res.json(lr);
 }));
