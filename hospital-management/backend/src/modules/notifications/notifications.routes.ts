@@ -37,7 +37,7 @@ router.patch('/mark-all-read', authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR'), asy
   res.json({ message: 'All notifications marked as read' });
 }));
 
-router.delete('/:id', validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
+router.delete('/:id', authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR'), validateParams(idParamSchema), asyncHandler(async (req: AuthRequest, res: Response) => {
   await notificationsService.delete(req.params.id, req.user!.userId);
   res.status(204).send();
 }));

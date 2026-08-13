@@ -54,6 +54,7 @@
 - **BUG-HOS-BE-050**: Missing RBAC on schedule routes — any authenticated user could view working hours, time off, and services. Added `authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR')` to GET routes in schedule module (`schedule.routes.ts`)
 - **BUG-HOS-BE-051**: Missing RBAC on getById routes — any authenticated user could access individual resources. Added `authorize` middleware to GET /:id routes in appointments, departments, doctors, patients, medical-records, and users modules (`appointments.routes.ts`, `departments.routes.ts`, `doctors.routes.ts`, `patients.routes.ts`, `medicalRecords.routes.ts`, `users.routes.ts`)
 - **BUG-HOS-BE-052**: Missing RBAC on notifications patch routes — any authenticated user could mark notifications as read. Added `authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR')` to PATCH routes in notifications module (`notifications.routes.ts`)
+- **BUG-HOS-BE-053**: Missing RBAC on notifications delete route — any authenticated user could delete notifications. Added `authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR')` to DELETE route in notifications module (`notifications.routes.ts`)
 
 ### Fixed
 
