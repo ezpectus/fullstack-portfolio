@@ -43,6 +43,11 @@
 - **BUG-HOS-BE-039**: Missing parameter validation in users routes — `:id` parameter lacked validation on get, patch, and delete routes. Added `idParamSchema` with `validateParams` middleware to all affected routes (`users.routes.ts`)
 - **BUG-HOS-BE-040**: Missing rate limiting on invite route — `/invite` endpoint lacked `authRateLimiter`, creating potential DoS vector. Added `authRateLimiter` to prevent abuse (`auth.routes.ts`)
 - **BUG-HOS-BE-041**: CORS origins used insecure fallback — `CORS_ORIGINS` had default localhost fallback, potentially allowing unintended origins in production. Changed to `required()` to force explicit configuration (`config/env.ts`)
+- **BUG-HOS-BE-042**: Missing RBAC on appointments list route — any authenticated user could list all appointments. Added `authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR')` to `/appointments` route (`appointments.routes.ts`)
+- **BUG-HOS-BE-043**: Missing RBAC on patients list route — any authenticated user could list all patients. Added `authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR')` to `/patients` route (`patients.routes.ts`)
+- **BUG-HOS-BE-044**: Missing RBAC on departments list route — any authenticated user could list all departments. Added `authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR')` to `/departments` route (`departments.routes.ts`)
+- **BUG-HOS-BE-045**: Missing RBAC on doctors list route — any authenticated user could list all doctors. Added `authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR')` to `/doctors` route (`doctors.routes.ts`)
+- **BUG-HOS-BE-046**: Missing RBAC on users list route — any authenticated user could list all users. Added `authorize('ADMIN')` to `/users` route (`users.routes.ts`)
 
 ### Fixed
 

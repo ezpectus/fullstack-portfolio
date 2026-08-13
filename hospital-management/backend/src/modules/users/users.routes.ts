@@ -11,7 +11,7 @@ import { updateUserSchema, listUsersQuerySchema } from './users.dto';
 const router = Router();
 const idParamSchema = z.object({ id: z.string().uuid() });
 
-router.get('/', authenticate, asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/', authenticate, authorize('ADMIN'), asyncHandler(async (req: AuthRequest, res: Response) => {
   const query = listUsersQuerySchema.parse(req.query);
   const result = await usersService.list(query);
   res.json(result);

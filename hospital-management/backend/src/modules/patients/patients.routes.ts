@@ -11,7 +11,7 @@ import { createPatientSchema, updatePatientSchema, listPatientsQuerySchema } fro
 const router = Router();
 const idParamSchema = z.object({ id: z.string().uuid() });
 
-router.get('/', authenticate, asyncHandler(async (req: AuthRequest, res: Response) => {
+router.get('/', authenticate, authorize('ADMIN', 'RECEPTIONIST', 'DOCTOR'), asyncHandler(async (req: AuthRequest, res: Response) => {
   const query = listPatientsQuerySchema.parse(req.query);
   const result = await patientsService.list(query);
   res.json(result);
