@@ -32,6 +32,8 @@
 - **BUG-LIB-BE-018**: Missing rate limiting on invite route — `/invite` endpoint lacked `authLimiter`, creating potential DoS vector. Added `authLimiter` to prevent abuse (`auth.routes.ts`)
 - **BUG-LIB-BE-019**: Missing RBAC on books list route — any authenticated user could list all books. Added `requireRole(ROLES.ADMIN, ROLES.LIBRARIAN, ROLES.MEMBER)` to `/books` route (`books.routes.ts`)
 - **BUG-LIB-BE-020**: Missing RBAC on book-copies list route — any authenticated user could list all book copies. Added `requireRole(ROLES.ADMIN, ROLES.LIBRARIAN, ROLES.MEMBER)` to `/book-copies` route (`book-copies.routes.ts`)
+- **BUG-LIB-BE-021**: Missing RBAC on getById routes — any authenticated user could access individual resources. Added `requireRole(ROLES.ADMIN, ROLES.LIBRARIAN, ROLES.MEMBER)` to GET /:id routes in books and book-copies modules (`books.routes.ts`, `book-copies.routes.ts`)
+- **BUG-LIB-BE-022**: Missing RBAC on dashboard route — any authenticated user could access dashboard stats. Added `requireRole(ROLES.ADMIN, ROLES.LIBRARIAN)` to `/dashboard` route (`dashboard.routes.ts`)
 
 ## [1.0.0] — 2025-01-15
 

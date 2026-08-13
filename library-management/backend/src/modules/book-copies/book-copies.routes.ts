@@ -8,7 +8,7 @@ import { list, getById, create, update, remove } from './book-copies.controller'
 const router = Router();
 
 router.get('/', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN, ROLES.MEMBER), validateQuery(copyPaginationSchema), list);
-router.get('/:id', authenticate, validateParams(idParamSchema), getById);
+router.get('/:id', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN, ROLES.MEMBER), validateParams(idParamSchema), getById);
 router.post('/', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN), validateBody(createCopySchema), create);
 router.patch('/:id', authenticate, requireRole(ROLES.ADMIN, ROLES.LIBRARIAN), validateParams(idParamSchema), validateBody(updateCopySchema), update);
 router.delete('/:id', authenticate, requireRole(ROLES.ADMIN), validateParams(idParamSchema), remove);
