@@ -10,7 +10,7 @@ const router = Router();
 
 const idParamSchema = z.object({ id: z.string().uuid() });
 
-router.get('/', authenticate, ...purchaseOrderController.list);
+router.get('/', authenticate, requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF), ...purchaseOrderController.list);
 router.get('/:id', authenticate, validateParams(idParamSchema), ...purchaseOrderController.getById);
 router.post('/', authenticate, requireRole(ROLES.ADMIN, ROLES.MANAGER), ...purchaseOrderController.create);
 router.patch('/:id', authenticate, validateParams(idParamSchema), requireRole(ROLES.ADMIN, ROLES.MANAGER), ...purchaseOrderController.update);

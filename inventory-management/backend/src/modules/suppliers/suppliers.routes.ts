@@ -10,7 +10,7 @@ const router = Router();
 
 const idParamSchema = z.object({ id: z.string().uuid() });
 
-router.get('/', authenticate, ...supplierController.list);
+router.get('/', authenticate, requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF), ...supplierController.list);
 router.get('/:id', authenticate, validateParams(idParamSchema), ...supplierController.getById);
 router.post('/', authenticate, requireRole(ROLES.ADMIN, ROLES.MANAGER), ...supplierController.create);
 router.patch('/:id', authenticate, validateParams(idParamSchema), requireRole(ROLES.ADMIN, ROLES.MANAGER), ...supplierController.update);

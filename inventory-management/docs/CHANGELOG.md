@@ -12,6 +12,11 @@
 - **BUG-INV-MGMT-BE-019**: Missing RBAC in dashboard routes — any authenticated user could access dashboard metrics. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER)` to all dashboard routes (`dashboard.routes.ts`)
 - **BUG-INV-MGMT-BE-020**: Missing body validation on refresh route — `/refresh` endpoint lacked `validateBody` middleware. Added `validateBody(refreshSchema)` to ensure request body is validated (`auth.routes.ts`)
 - **BUG-INV-MGMT-BE-021**: Missing rate limiting on invite route — `/invite` endpoint lacked `authLimiter`, creating potential DoS vector. Added `authLimiter` to prevent abuse (`auth.routes.ts`)
+- **BUG-INV-MGMT-BE-022**: Missing RBAC on categories list route — any authenticated user could list all categories. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/categories` route (`categories.routes.ts`)
+- **BUG-INV-MGMT-BE-023**: Missing RBAC on products list route — any authenticated user could list all products. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/products` route (`products.routes.ts`)
+- **BUG-INV-MGMT-BE-024**: Missing RBAC on suppliers list route — any authenticated user could list all suppliers. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/suppliers` route (`suppliers.routes.ts`)
+- **BUG-INV-MGMT-BE-025**: Missing RBAC on warehouses list route — any authenticated user could list all warehouses. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/warehouses` route (`warehouses.routes.ts`)
+- **BUG-INV-MGMT-BE-026**: Missing RBAC on purchase-orders list route — any authenticated user could list all purchase orders. Added `requireRole(ROLES.ADMIN, ROLES.MANAGER, ROLES.STAFF)` to `/purchase-orders` route (`purchase-orders.routes.ts`)
 
 ### Fixed
 - **BUG-INV-MGMT-BE-012:** Removed inconsistent "type": "module" from package.json to match CommonJS tsconfig configuration (`package.json`)
